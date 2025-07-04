@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import '../index.css'
-import AuthForm from '@/components/AuthForm/AuthForm.vue'
+import { AuthForm } from '@/components'
 </script>
 
 <template>
