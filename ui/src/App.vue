@@ -1,10 +1,8 @@
-<script setup lang="ts">
-import { Button } from '@/components/ui/button'
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div>Hello</div>
-  <Button variant="outline">Button from Shadcn</Button>
+  <!-- Swapped out for views -->
+  <router-view />
 </template>
 
 <style scoped></style>
