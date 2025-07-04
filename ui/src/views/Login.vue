@@ -1,7 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import '../index.css'
+import AuthForm from '@/components/AuthForm/AuthForm.vue'
+</script>
 
 <template>
-  <div>Login Page</div>
+  <AuthForm />
 </template>
 
 <style scoped></style>
