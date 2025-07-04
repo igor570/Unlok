@@ -30,6 +30,7 @@ const onSubmit = form.handleSubmit((values) => {
       <div class="description">This is your public display name.</div>
       <div class="error" v-if="errors.username">{{ errors.username }}</div>
     </div>
+
     <!-- Password Field -->
     <div class="form-group">
       <label for="password">Password</label>
@@ -43,6 +44,7 @@ const onSubmit = form.handleSubmit((values) => {
       <div class="description">Must be at least 8 characters.</div>
       <div class="error" v-if="errors.password">{{ errors.password }}</div>
     </div>
+
     <!-- Confirm Password field -->
     <div class="form-group">
       <label for="confirmedPassword">Confirm Password</label>
@@ -56,6 +58,8 @@ const onSubmit = form.handleSubmit((values) => {
       <div class="description">Please re-enter your password.</div>
       <div class="error" v-if="errors.confirmedPassword">{{ errors.confirmedPassword }}</div>
     </div>
+
+    <!-- Submit -->
     <button class="submit-btn" type="submit">Submit</button>
   </form>
 </template>
