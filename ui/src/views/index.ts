@@ -1,0 +1,8 @@
+export { default as Complete } from './Complete.vue'
+export { default as Download } from './Download.vue'
+export { default as History } from './History.vue'
+export { default as Home } from './Home.vue'
+export { default as Login } from './Login.vue'
+export { default as Profile } from './Profile.vue'
+export { default as Unlock } from './Unlock.vue'
+export { default as Upload } from './Upload.vue'
