@@ -1,3 +1,5 @@
+//TODO: Use this to test on FE, move to backend later
+
 // Character to emoji mapping for passwords
 const charToEmoji: Record<string, string> = Object.freeze({
   a: '😀',
