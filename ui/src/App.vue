@@ -1,7 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { Nav } from '@/components'
+</script>
 
 <template>
   <div class="app-bg">
+    <Nav />
     <router-view />
   </div>
 </template>
@@ -14,6 +17,7 @@ body {
 .app-bg {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   background: #1a1a1a;
 }
 </style>
