@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { useForm, Field } from 'vee-validate'
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { authFormSchema } from '@/types'
-
-const router = useRouter()
+import { messageFormSchema } from '@/types'
 
 const form = useForm({
-  validationSchema: authFormSchema,
+  validationSchema: messageFormSchema,
 })
 
 const errors = computed(() => form.errors.value)
@@ -16,58 +13,39 @@ const values = computed(() => form.values)
 const onSubmit = form.handleSubmit((values) => {
   console.log('Form submitted!', values)
 })
-
-const handleSkip = () => router.push('/')
 </script>
 
 <template>
   <section class="auth-page">
     <form class="auth-form" @submit="onSubmit">
-      <!-- Username Field -->
+      <!-- Subject Field -->
       <div class="form-group">
-        <label for="username">Username</label>
+        <label for="subject">subject</label>
         <Field
-          id="username"
-          name="username"
+          id="subject"
+          name="subject"
           type="text"
-          placeholder="Enter your username..."
-          v-model="values.username"
+          placeholder="Enter your subject..."
+          v-model="values.subject"
         />
-        <div class="error" v-if="errors.username">{{ errors.username }}</div>
+        <div class="error" v-if="errors.subject">{{ errors.subject }}</div>
       </div>
 
-      <!-- Password Field -->
+      <!-- Message Field -->
       <div class="form-group">
-        <label for="password">Password</label>
-        <Field
-          id="password"
-          name="password"
-          type="password"
-          placeholder="Enter your Password..."
-          v-model="values.password"
+        <label for="message">message</label>
+        <textarea
+          class="textarea-message"
+          id="message"
+          name="message"
+          type="text"
+          placeholder="Enter your message..."
+          v-model="values.message"
         />
-        <div class="error" v-if="errors.password">{{ errors.password }}</div>
+        <div class="error" v-if="errors.message">{{ errors.message }}</div>
       </div>
-
-      <!-- Confirm Password field -->
-      <div class="form-group">
-        <label for="confirmedPassword">Confirm Password</label>
-        <Field
-          id="confirmedPassword"
-          name="confirmedPassword"
-          type="password"
-          placeholder="Enter your username..."
-          v-model="values.confirmedPassword"
-        />
-        <div class="error" v-if="errors.confirmedPassword">{{ errors.confirmedPassword }}</div>
-      </div>
-
       <!-- Submit -->
-      <div class="button-group">
-        <button class="submit-btn" type="submit">Submit</button>
-        <!-- Skip Button -->
-        <button class="submit-btn-ghost" @click="handleSkip">Skip</button>
-      </div>
+      <button class="submit-btn" type="submit">Submit</button>
     </form>
   </section>
 </template>
@@ -110,6 +88,12 @@ input {
   font-size: 1rem;
   outline: none;
   transition: border 0.2s;
+}
+.textarea-message {
+  min-height: 300px;
+  resize: none;
+  -webkit-user-drag: none;
+  user-select: text;
 }
 input:focus {
   border-color: #6366f1;

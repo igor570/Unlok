@@ -1,7 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { UploadForm } from '@/components'
+</script>
 
 <template>
-  <div>Upload Page</div>
+  <UploadForm />
 </template>
 
 <style scoped></style>
