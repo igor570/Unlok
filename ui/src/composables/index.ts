@@ -1,1 +1,1 @@
-export * from './useAuthUser'
+export * from './useAuth'
