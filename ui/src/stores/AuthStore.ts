@@ -5,12 +5,12 @@ export const useAuthStore = defineStore(
   'auth',
   () => {
     const signedIn = ref<boolean>(false)
-    //TODO: add token from api call
-    const token = ref()
+    const token = ref('')
 
-    const updateSignIn = () => (signedIn.value = !signedIn.value)
+    const updateSignIn = (bool: boolean) => (signedIn.value = bool)
+    const setToken = (tokenString: string) => (token.value = tokenString)
 
-    return { signedIn, updateSignIn } as const
+    return { signedIn, updateSignIn, setToken } as const
   },
   {
     persist: {

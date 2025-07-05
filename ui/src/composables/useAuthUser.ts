@@ -1,14 +1,17 @@
 import { useMutation, useQuery } from '@tanstack/vue-query'
+import { useAuthStore } from '@/stores/AuthStore'
+import type { SignUpResponse, LoginResponse, UserDetails } from '@/types'
+
+const store = useAuthStore()
+const { setToken } = store
 
 const baseURL = 'http://localhost:8080'
 
-interface UserDetails {
-  username: string
-  password: string
-  confirmPassword: string
-}
-
-const createUser = async ({ username, password, confirmPassword }: UserDetails) => {
+const createUser = async ({
+  username,
+  password,
+  confirmPassword,
+}: UserDetails): Promise<SignUpResponse> => {
   if (!password || !confirmPassword || !username) {
     throw new Error('Fields cannot be empty')
   }
@@ -38,7 +41,10 @@ const createUser = async ({ username, password, confirmPassword }: UserDetails) 
   }
 }
 
-const loginUser = async ({ username, password }: Omit<UserDetails, 'confirmPassword'>) => {
+const loginUser = async ({
+  username,
+  password,
+}: Omit<UserDetails, 'confirmPassword'>): Promise<LoginResponse> => {
   if (!password || !username) throw new Error('Fields cannot be empty')
 
   try {
@@ -55,7 +61,10 @@ const loginUser = async ({ username, password }: Omit<UserDetails, 'confirmPassw
       throw new Error(error || 'Failed to login')
     }
 
-    const data = await res.json()
+    const data: LoginResponse = await res.json()
+
+    if (data.token) setToken(data.token)
+
     return data
   } catch (e) {
     throw new Error(e instanceof Error ? e.message : String(e))

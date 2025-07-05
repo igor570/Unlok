@@ -1,6 +1,21 @@
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 
+export interface UserDetails {
+  username: string
+  password: string
+  confirmPassword: string
+}
+
+export interface LoginResponse {
+  token: string
+  error: string
+}
+
+export interface SignUpResponse {
+  error: string
+}
+
 export const authFormSchema = toTypedSchema(
   z
     .object({
