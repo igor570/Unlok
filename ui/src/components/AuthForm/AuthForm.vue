@@ -73,16 +73,7 @@ const handleSkip = () => router.push('/')
 </template>
 
 <style lang="scss" scoped>
-.auth-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100%;
-  margin: 2rem;
-}
 .auth-form {
-  margin: 0 auto;
   padding: 2rem 1.5rem;
   background: #fff;
   border-radius: 8px;

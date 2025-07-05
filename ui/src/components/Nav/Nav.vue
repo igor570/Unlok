@@ -22,6 +22,7 @@ const { signedIn } = storeToRefs(store)
 nav {
   background: #222;
   padding: 1rem;
+  margin-bottom: 2rem;
 }
 ul {
   display: flex;

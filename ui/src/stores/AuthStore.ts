@@ -4,7 +4,8 @@ import { defineStore } from 'pinia'
 export const useAuthStore = defineStore(
   'auth',
   () => {
-    const signedIn = ref<boolean>(false)
+    //TODO set to false for prod
+    const signedIn = ref<boolean>(true)
     const token = ref('')
 
     const updateSignIn = (bool: boolean) => (signedIn.value = bool)

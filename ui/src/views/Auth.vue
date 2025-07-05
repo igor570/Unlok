@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { UploadForm } from '@/components'
+import { AuthForm } from '@/components'
 </script>
 
 <template>
-  <section class="upload-page">
-    <UploadForm />
+  <section class="auth-page">
+    <AuthForm />
   </section>
 </template>
 
 <style scoped>
-.upload-page {
+.auth-page {
   height: 100%;
   width: 100%;
 }

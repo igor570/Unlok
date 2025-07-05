@@ -16,6 +16,7 @@ body {
 }
 .app-bg {
   min-height: 100vh;
+  min-width: 1280px;
   display: flex;
   flex-direction: column;
   background: #1a1a1a;

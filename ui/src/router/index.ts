@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { Home, Login, Download, History, Profile, Unlock, Upload, Complete } from '@/views'
+import { Home, Auth, Download, History, Profile, Unlock, Upload, Complete } from '@/views'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,7 +12,7 @@ const router = createRouter({
     {
       path: '/auth',
       name: 'auth',
-      component: Login,
+      component: Auth,
     },
     {
       path: '/download',

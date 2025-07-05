@@ -16,51 +16,40 @@ const onSubmit = form.handleSubmit((values) => {
 </script>
 
 <template>
-  <section class="auth-page">
-    <form class="auth-form" @submit="onSubmit">
-      <!-- Subject Field -->
-      <div class="form-group">
-        <label for="subject">subject</label>
-        <Field
-          id="subject"
-          name="subject"
-          type="text"
-          placeholder="Enter your subject..."
-          v-model="values.subject"
-        />
-        <div class="error" v-if="errors.subject">{{ errors.subject }}</div>
-      </div>
+  <form class="upload-form" @submit="onSubmit">
+    <!-- Subject Field -->
+    <div class="form-group">
+      <label for="subject">subject</label>
+      <Field
+        id="subject"
+        name="subject"
+        type="text"
+        placeholder="Enter your subject..."
+        v-model="values.subject"
+      />
+      <div class="error" v-if="errors.subject">{{ errors.subject }}</div>
+    </div>
 
-      <!-- Message Field -->
-      <div class="form-group">
-        <label for="message">message</label>
-        <textarea
-          class="textarea-message"
-          id="message"
-          name="message"
-          type="text"
-          placeholder="Enter your message..."
-          v-model="values.message"
-        />
-        <div class="error" v-if="errors.message">{{ errors.message }}</div>
-      </div>
-      <!-- Submit -->
-      <button class="submit-btn" type="submit">Submit</button>
-    </form>
-  </section>
+    <!-- Message Field -->
+    <div class="form-group">
+      <label for="message">message</label>
+      <textarea
+        class="textarea-message"
+        id="message"
+        name="message"
+        type="text"
+        placeholder="Enter your message..."
+        v-model="values.message"
+      />
+      <div class="error" v-if="errors.message">{{ errors.message }}</div>
+    </div>
+    <!-- Submit -->
+    <button class="submit-btn" type="submit">Submit</button>
+  </form>
 </template>
 
 <style lang="scss" scoped>
-.auth-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100%;
-  margin: 2rem;
-}
-.auth-form {
-  margin: 0 auto;
+.upload-form {
   padding: 2rem 1.5rem;
   background: #fff;
   border-radius: 8px;
