@@ -1,10 +1,26 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useAuthStore } from '@/stores/AuthStore'
+import corgiImg from '../assets/Corgi.jpg'
+
+interface ProfileProps {
+  name: string
+  img: string
+}
+
+const { name = 'Peszter', img = corgiImg } = defineProps<ProfileProps>()
+
+const store = useAuthStore()
+const { logout } = store
+</script>
 
 <template>
   <section class="profile-page">
     <div class="profile">
-      <img class="profile-photo" src="../assets/Corgi.jpg" />
-      <div class="profile-name">Eszter P.</div>
+      <div class="profile-info">
+        <img class="profile-photo" :src="img" />
+        <div class="profile-name">{{ name }}</div>
+      </div>
+      <button @click="logout">Logout</button>
     </div>
   </section>
 </template>
@@ -20,24 +36,31 @@
   width: 500px;
   height: 45px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 1rem;
   background-color: #222;
   padding: 24px;
   border-radius: 0.5rem;
-}
 
-.profile-name {
-  color: white;
-  font-size: 24px;
-}
+  &-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
 
-.profile-photo {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 100%;
-  border: 1px solid white;
-  display: block;
+  &-name {
+    color: white;
+    font-size: 24px;
+  }
+
+  &-photo {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 100%;
+    border: 1px solid white;
+    display: block;
+  }
 }
 </style>
