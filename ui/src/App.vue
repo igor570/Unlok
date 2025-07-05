@@ -14,8 +14,6 @@ body {
 .app-bg {
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
   background: #1a1a1a;
 }
 </style>

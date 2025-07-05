@@ -2,6 +2,9 @@
 import { useForm, Field } from 'vee-validate'
 import { authFormSchema } from '@/types/auth'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const form = useForm({
   validationSchema: authFormSchema,
@@ -13,60 +16,72 @@ const values = computed(() => form.values)
 const onSubmit = form.handleSubmit((values) => {
   console.log('Form submitted!', values)
 })
+
+const handleSkip = () => router.push('/')
 </script>
 
 <template>
-  <form class="auth-form" @submit="onSubmit">
-    <!-- Username Field -->
-    <div class="form-group">
-      <label for="username">Username</label>
-      <Field
-        id="username"
-        name="username"
-        type="text"
-        placeholder="Enter your username..."
-        v-model="values.username"
-      />
-      <div class="description">This is your public display name.</div>
-      <div class="error" v-if="errors.username">{{ errors.username }}</div>
-    </div>
+  <section class="auth-page">
+    <form class="auth-form" @submit="onSubmit">
+      <!-- Username Field -->
+      <div class="form-group">
+        <label for="username">Username</label>
+        <Field
+          id="username"
+          name="username"
+          type="text"
+          placeholder="Enter your username..."
+          v-model="values.username"
+        />
+        <div class="error" v-if="errors.username">{{ errors.username }}</div>
+      </div>
 
-    <!-- Password Field -->
-    <div class="form-group">
-      <label for="password">Password</label>
-      <Field
-        id="password"
-        name="password"
-        type="password"
-        placeholder="Enter your Password..."
-        v-model="values.password"
-      />
-      <div class="description">Must be at least 8 characters.</div>
-      <div class="error" v-if="errors.password">{{ errors.password }}</div>
-    </div>
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <Field
+          id="password"
+          name="password"
+          type="password"
+          placeholder="Enter your Password..."
+          v-model="values.password"
+        />
+        <div class="error" v-if="errors.password">{{ errors.password }}</div>
+      </div>
 
-    <!-- Confirm Password field -->
-    <div class="form-group">
-      <label for="confirmedPassword">Confirm Password</label>
-      <Field
-        id="confirmedPassword"
-        name="confirmedPassword"
-        type="password"
-        placeholder="Enter your username..."
-        v-model="values.confirmedPassword"
-      />
-      <div class="description">Please re-enter your password.</div>
-      <div class="error" v-if="errors.confirmedPassword">{{ errors.confirmedPassword }}</div>
-    </div>
+      <!-- Confirm Password field -->
+      <div class="form-group">
+        <label for="confirmedPassword">Confirm Password</label>
+        <Field
+          id="confirmedPassword"
+          name="confirmedPassword"
+          type="password"
+          placeholder="Enter your username..."
+          v-model="values.confirmedPassword"
+        />
+        <div class="error" v-if="errors.confirmedPassword">{{ errors.confirmedPassword }}</div>
+      </div>
 
-    <!-- Submit -->
-    <button class="submit-btn" type="submit">Submit</button>
-  </form>
+      <!-- Submit -->
+      <div class="button-group">
+        <button class="submit-btn" type="submit">Submit</button>
+        <!-- Skip Button -->
+        <button class="submit-btn-ghost" @click="handleSkip">Skip</button>
+      </div>
+    </form>
+  </section>
 </template>
 
-<style>
+<style lang="scss" scoped>
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  margin: 2rem;
+}
 .auth-form {
-  min-width: 500px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
   background: #fff;
@@ -75,11 +90,14 @@ const onSubmit = form.handleSubmit((values) => {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  width: 400px;
+  height: fit-content();
 }
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+  height: fit-content();
 }
 label {
   font-weight: 500;
@@ -105,11 +123,15 @@ input:focus {
   font-size: 0.85rem;
   margin-top: 0.1rem;
 }
-.submit-btn {
+.button-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-common {
+  flex: 1;
   margin-top: 0.5rem;
   padding: 0.6rem 1.2rem;
-  background: #6366f1;
-  color: #fff;
   border: none;
   border-radius: 4px;
   font-size: 1rem;
@@ -117,7 +139,24 @@ input:focus {
   cursor: pointer;
   transition: background 0.2s;
 }
-.submit-btn:hover {
-  background: #4f46e5;
+
+.submit-btn {
+  @extend .btn-common;
+  background: #6366f1;
+  color: #fff;
+
+  &:hover {
+    background: #4f46e5;
+  }
+
+  &-ghost {
+    @extend .btn-common;
+    background-color: transparent;
+    border: 1px solid #6366f1;
+
+    &:hover {
+      background: #dad8ff;
+    }
+  }
 }
 </style>
