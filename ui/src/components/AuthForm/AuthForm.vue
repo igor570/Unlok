@@ -22,7 +22,7 @@ const handleSkip = () => router.push('/')
 
 <template>
   <section class="auth-page">
-    <form class="auth-form" @submit="onSubmit">
+    <form class="auth-form" @submit.prevent="onSubmit">
       <!-- Username Field -->
       <div class="form-group">
         <label for="username">Username</label>

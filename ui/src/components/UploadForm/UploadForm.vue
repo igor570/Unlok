@@ -2,21 +2,24 @@
 import { useForm, Field } from 'vee-validate'
 import { computed } from 'vue'
 import { messageFormSchema } from '@/types'
+import { useCreateMessage } from '@/composables/useCreateMessage'
 
 const form = useForm({
   validationSchema: messageFormSchema,
 })
 
+const mutation = useCreateMessage()
+
 const errors = computed(() => form.errors.value)
 const values = computed(() => form.values)
 
 const onSubmit = form.handleSubmit((values) => {
-  console.log('Form submitted!', values)
+  mutation.mutate(values)
 })
 </script>
 
 <template>
-  <form class="upload-form" @submit="onSubmit">
+  <form class="upload-form" @submit.prevent="onSubmit">
     <!-- Personal Identifier -->
     <div class="form-group">
       <label for="subject">Identifier</label>
