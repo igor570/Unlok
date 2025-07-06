@@ -1,11 +1,10 @@
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useAuthStore } from '@/stores/AuthStore'
+import { baseURL } from '@/consts'
 import type { SignUpResponse, LoginResponse, UserDetails } from '@/types'
 
 const store = useAuthStore()
 const { setToken } = store
-
-const baseURL = import.meta.env.VITE_API_URL
 
 const createUser = async ({
   username,

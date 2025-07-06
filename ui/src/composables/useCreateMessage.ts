@@ -1,7 +1,6 @@
-import type { Message } from '@/types'
+import { baseURL } from '@/consts'
 import { useMutation } from '@tanstack/vue-query'
-
-const baseURL = import.meta.env.VITE_API_URL
+import type { Message } from '@/types'
 
 export const createMessage = async (formData: Message) => {
   const { identifier, subject, message } = formData
