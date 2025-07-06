@@ -5,7 +5,7 @@ import type { SignUpResponse, LoginResponse, UserDetails } from '@/types'
 const store = useAuthStore()
 const { setToken } = store
 
-const baseURL = 'http://localhost:8080'
+const baseURL = import.meta.env.VITE_API_URL
 
 const createUser = async ({
   username,

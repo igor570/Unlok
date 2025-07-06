@@ -2,7 +2,6 @@ import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 
 export interface Message {
-  id: string
   identifier: string
   subject: string
   message: string
