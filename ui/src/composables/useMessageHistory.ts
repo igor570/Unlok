@@ -6,12 +6,11 @@ export const getMessageHistory = async (userId: string): Promise<MessageHistory>
   if (!userId) throw new Error('userId is required')
 
   try {
-    const res = await fetch(`${baseURL}/message`, {
+    const res = await fetch(`${baseURL}/message?userId=${encodeURIComponent(userId)}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userId }),
     })
 
     if (!res.ok) {
