@@ -10,6 +10,7 @@ const { signedIn } = storeToRefs(store)
 <template>
   <nav>
     <ul>
+      <li><RouterLink to="/">Home</RouterLink></li>
       <li><RouterLink to="/upload">Upload</RouterLink></li>
       <li v-if="signedIn"><RouterLink to="/history">History</RouterLink></li>
       <li v-if="!signedIn"><RouterLink to="/auth">Sign Up</RouterLink></li>
