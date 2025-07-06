@@ -17,6 +17,18 @@ const onSubmit = form.handleSubmit((values) => {
 
 <template>
   <form class="upload-form" @submit="onSubmit">
+    <!-- Personal Identifier -->
+    <div class="form-group">
+      <label for="subject">Identifier</label>
+      <Field
+        id="identifier"
+        name="identifier"
+        type="text"
+        placeholder="Give it a memorable name..."
+        v-model="values.identifier"
+      />
+      <div class="error" v-if="errors.identifier">{{ errors.identifier }}</div>
+    </div>
     <!-- Subject Field -->
     <div class="form-group">
       <label for="subject">subject</label>
