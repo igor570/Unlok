@@ -4,7 +4,7 @@ import * as z from 'zod'
 export interface UserDetails {
   username: string
   password: string
-  confirmPassword: string
+  confirmedPassword: string
 }
 
 export interface LoginResponse {

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/vue-query'
+import { useMutation } from '@tanstack/vue-query'
 import { baseURL } from '@/consts'
 import { useAuthStore } from '@/stores/AuthStore'
 import type { SignUpResponse, LoginResponse, UserDetails } from '@/types'
@@ -6,13 +6,13 @@ import type { SignUpResponse, LoginResponse, UserDetails } from '@/types'
 const createUser = async ({
   username,
   password,
-  confirmPassword,
+  confirmedPassword,
 }: UserDetails): Promise<SignUpResponse> => {
-  if (!password || !confirmPassword || !username) {
+  if (!password || !confirmedPassword || !username) {
     throw new Error('Fields cannot be empty')
   }
 
-  if (password !== confirmPassword) {
+  if (password !== confirmedPassword) {
     throw new Error('Passwords do not match')
   }
 
@@ -40,7 +40,7 @@ const createUser = async ({
 const loginUser = async ({
   username,
   password,
-}: Omit<UserDetails, 'confirmPassword'>): Promise<LoginResponse> => {
+}: Omit<UserDetails, 'confirmedPassword'>): Promise<LoginResponse> => {
   if (!password || !username) throw new Error('Fields cannot be empty')
 
   const store = useAuthStore()
@@ -69,16 +69,16 @@ const loginUser = async ({
   }
 }
 
-export const useLoginUser = ({ username, password }: Omit<UserDetails, 'confirmPassword'>) => {
-  return useQuery({
-    queryKey: ['loginUser'],
-    queryFn: () => loginUser({ username, password }),
+export const useLoginUser = () => {
+  return useMutation({
+    mutationFn: ({ username, password }: Omit<UserDetails, 'confirmedPassword'>) =>
+      loginUser({ username, password }),
   })
 }
 
 export const useCreateUser = () => {
   return useMutation({
-    mutationFn: ({ username, password, confirmPassword }: UserDetails) =>
-      createUser({ username, password, confirmPassword }),
+    mutationFn: ({ username, password, confirmedPassword }: UserDetails) =>
+      createUser({ username, password, confirmedPassword }),
   })
 }

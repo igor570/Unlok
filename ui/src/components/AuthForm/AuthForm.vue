@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useForm, Field } from 'vee-validate'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authFormSchema } from '@/types'
+import { useCreateUser, useLoginUser } from '@/composables'
 
 const router = useRouter()
 
@@ -10,11 +11,38 @@ const form = useForm({
   validationSchema: authFormSchema,
 })
 
+const loginMutate = useLoginUser()
+const signupMutate = useCreateUser()
+
+type FormMode = 'login' | 'signup'
+
+const toggleForm = ref<FormMode>('signup')
+
 const errors = computed(() => form.errors.value)
 const values = computed(() => form.values)
+const footerText = computed(() => {
+  if (toggleForm.value === 'signup') return 'Already signed up? '
+  else return 'Not signed up? '
+})
 
 const onSubmit = form.handleSubmit((values) => {
-  console.log('Form submitted!', values)
+  const { username, password, confirmedPassword } = values
+
+  if (toggleForm.value === 'login')
+    loginMutate.mutate(
+      { username, password },
+      {
+        onSuccess: () => console.log('Logged in '),
+      },
+    )
+  if (toggleForm.value === 'signup')
+    signupMutate.mutate(
+      { username, password, confirmedPassword },
+      {
+        onSuccess: () => console.log('Signed up'),
+      },
+    )
+  form.resetForm()
 })
 
 const handleSkip = () => router.push('/')
@@ -50,18 +78,27 @@ const handleSkip = () => router.push('/')
       </div>
 
       <!-- Confirm Password field -->
-      <div class="form-group">
-        <label for="confirmedPassword">Confirm Password</label>
-        <Field
-          id="confirmedPassword"
-          name="confirmedPassword"
-          type="password"
-          placeholder="Enter your username..."
-          v-model="values.confirmedPassword"
-        />
-        <div class="error" v-if="errors.confirmedPassword">{{ errors.confirmedPassword }}</div>
+      <Transition name="fade">
+        <div class="form-group" v-if="toggleForm === 'signup'">
+          <label for="confirmedPassword">Confirm Password</label>
+          <Field
+            id="confirmedPassword"
+            name="confirmedPassword"
+            type="password"
+            placeholder="Enter your username..."
+            v-model="values.confirmedPassword"
+          />
+          <div class="error" v-if="errors.confirmedPassword">{{ errors.confirmedPassword }}</div>
+        </div>
+      </Transition>
+
+      <div v-if="toggleForm === 'signup'">
+        {{ footerText }}<span @click="toggleForm = 'login'">Login here</span>
       </div>
 
+      <div v-if="toggleForm === 'login'">
+        {{ footerText }}<span @click="toggleForm = 'signup'">Signup here</span>
+      </div>
       <!-- Submit -->
       <div class="button-group">
         <button class="submit-btn" type="submit">Submit</button>
@@ -82,13 +119,14 @@ const handleSkip = () => router.push('/')
   flex-direction: column;
   gap: 1.2rem;
   width: 400px;
-  height: fit-content();
+  transition:
+    min-height 0.3s,
+    padding 0.3s;
 }
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  height: fit-content();
 }
 label {
   font-weight: 500;
@@ -149,5 +187,26 @@ input:focus {
       background: #dad8ff;
     }
   }
+}
+
+span {
+  color: rgb(76, 76, 216);
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
 }
 </style>
