@@ -3,7 +3,9 @@ import { useGetMessage } from '@/composables'
 
 const { id } = defineProps<{ id: string }>()
 
-const { data, isLoading, error } = useGetMessage(id)
+console.log(id)
+
+// const { data, isLoading, error } = useGetMessage(id)
 </script>
 
 <template>
