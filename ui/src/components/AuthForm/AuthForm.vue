@@ -11,7 +11,7 @@ import { useAuthStore } from '@/stores'
 const router = useRouter()
 
 const store = useAuthStore()
-const { setLoggedIn } = store
+const { setUser, setLoggedIn } = store
 
 const { mutateAsync: loginMutateAsync, isPending: loginPending } = useLoginUser()
 const { mutateAsync: signupMutateAsync, isPending: signupPending } = useCreateUser()
@@ -36,7 +36,12 @@ const onSubmit = form.handleSubmit(async (values) => {
   const mode = toggleForm.value
 
   if (mode === 'login') {
-    await loginMutateAsync(omit(values, ['confirmedPassword']))
+    const result = await loginMutateAsync(omit(values, ['confirmedPassword']))
+    if (result) {
+      const { id, username, profilePhoto } = result
+      // use this pinia data across the app when its set
+      setUser({ id, username, profilePhoto })
+    }
     setLoggedIn(true)
     router.push('/upload')
   }

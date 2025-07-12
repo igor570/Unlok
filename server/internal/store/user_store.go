@@ -8,7 +8,7 @@ import (
 )
 
 type User struct {
-	Id           int    `json:"id"`
+	Id           string `json:"id"`
 	Username     string `json:"username"`
 	Password     string `json:"password"`
 	ProfilePhoto string `json:"profile_photo"`
@@ -28,7 +28,7 @@ func NewUserStore(db *sql.DB, logger *log.Logger) *UserPgStore {
 
 type UserStore interface {
 	SignUp(user *User) error
-	Login(u *User) error
+	Login(u *User) (*User, error)
 
 	GetUserById(id int) (*User, error)
 	GetUserByUsername(username string) (*User, error)
@@ -58,26 +58,29 @@ func (s *UserPgStore) SignUp(u *User) error {
 	return nil
 }
 
-func (s *UserPgStore) Login(u *User) error {
-	var hashedPassword string
+func (s *UserPgStore) Login(u *User) (*User, error) {
+	var id, username, hashedPassword, profilePhoto string
 
-	// Get the hashed password from the DB for the given username
-	query := `SELECT password FROM users WHERE username = $1`
-
-	err := s.db.QueryRow(query, u.Username).Scan(&hashedPassword)
+	// Get user info and hashed password from the DB for the given username
+	query := `SELECT id, username, password, profile_photo FROM users WHERE username = $1`
+	err := s.db.QueryRow(query, u.Username).Scan(&id, &username, &hashedPassword, &profilePhoto)
 
 	if err != nil {
-		return err // user not found or DB error
+		return nil, err // user not found or DB error
 	}
 
 	// Compare the hashed password from DB with the plaintext password from the request
 	err = utils.ComparePasswords(hashedPassword, u.Password)
-
 	if err != nil {
-		return err // password does not match
+		return nil, err // password does not match
 	}
 
-	return nil // login successful
+	user := &User{
+		Id:           id,
+		Username:     username,
+		ProfilePhoto: profilePhoto,
+	}
+	return user, nil // login successful
 }
 
 func (s *UserPgStore) GetUserById(id int) (*User, error) {

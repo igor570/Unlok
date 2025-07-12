@@ -7,12 +7,15 @@ export interface UserDetails {
   confirmedPassword?: string
 }
 
-export interface LoginResponse {
+export interface LoginAPIResponse {
+  id: string
+  username: string
+  profilePhoto: string
   token: string
-  error: string
+  error?: string
 }
 
-export interface SignUpResponse {
+export interface SignupAPIResponse {
   error: string
 }
 

@@ -75,7 +75,7 @@ func (uh *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = uh.userStore.Login(&user)
+	loggedInUser, err := uh.userStore.Login(&user)
 
 	if err != nil {
 		uh.logger.Printf("ERROR: Login %v", err)
@@ -83,5 +83,6 @@ func (uh *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.WriteJSON(w, http.StatusCreated, utils.Envelope{"Success": "Logged in user"})
+	// Return the logged in user struct to the frontend
+	utils.WriteJSON(w, http.StatusOK, utils.Envelope{"user": loggedInUser})
 }
