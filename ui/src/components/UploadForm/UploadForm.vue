@@ -10,16 +10,14 @@ const form = useForm({
   validationSchema: messageFormSchema,
 })
 
-const { mutate, isPending } = useCreateMessage()
+const { mutateAsync, isPending } = useCreateMessage()
 
 const errors = computed(() => form.errors.value)
 const values = computed(() => form.values)
 
-const onSubmit = form.handleSubmit((values) => {
-  // If the message is created, put the user to the completed section
-  mutate(values, {
-    onSuccess: (data) => router.push({ name: 'complete', query: { id: data.id } }),
-  })
+const onSubmit = form.handleSubmit(async (values) => {
+  const result = await mutateAsync(values)
+  router.push({ name: 'complete', query: { id: result.id } })
 })
 </script>
 

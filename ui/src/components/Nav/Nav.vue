@@ -4,7 +4,7 @@ import { useAuthStore } from '@/stores/AuthStore'
 import { storeToRefs } from 'pinia'
 
 const store = useAuthStore()
-const { signedIn } = storeToRefs(store)
+const { loggedIn } = storeToRefs(store)
 </script>
 
 <template>
@@ -12,9 +12,9 @@ const { signedIn } = storeToRefs(store)
     <ul>
       <li><RouterLink to="/">Home</RouterLink></li>
       <li><RouterLink to="/upload">Upload</RouterLink></li>
-      <li v-if="signedIn"><RouterLink to="/history">History</RouterLink></li>
-      <li v-if="!signedIn"><RouterLink to="/auth">Sign Up</RouterLink></li>
-      <li v-if="signedIn"><RouterLink to="/profile">Profile</RouterLink></li>
+      <li v-if="loggedIn"><RouterLink to="/history">History</RouterLink></li>
+      <li v-if="!loggedIn"><RouterLink to="/auth">Sign Up</RouterLink></li>
+      <li v-if="loggedIn"><RouterLink to="/profile">Profile</RouterLink></li>
     </ul>
   </nav>
 </template>

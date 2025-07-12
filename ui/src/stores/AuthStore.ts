@@ -10,21 +10,21 @@ export const useAuthStore = defineStore(
     //TODO set to false for prod
 
     //State
-    const signedIn = ref<boolean>(true)
+    const loggedIn = ref<boolean>(false)
     const token = ref('')
 
     //Actions
-    const updateSignIn = (bool: boolean) => (signedIn.value = bool)
+    const setLoggedIn = (bool: boolean) => (loggedIn.value = bool)
 
     const setToken = (tokenString: string) => (token.value = tokenString)
 
     const logout = () => {
       token.value = ''
-      signedIn.value = false
+      loggedIn.value = false
       router.push('/')
     }
 
-    return { signedIn, updateSignIn, setToken, logout } as const
+    return { loggedIn, setLoggedIn, setToken, logout } as const
   },
   {
     persist: {

@@ -5,6 +5,8 @@ import { useRouter } from 'vue-router'
 import { authFormSchema } from '@/types'
 import { Spinner } from '@/components'
 import { useCreateUser, useLoginUser } from '@/composables'
+import { omit } from 'lodash'
+import { useAuthStore } from '@/stores'
 
 const router = useRouter()
 
@@ -12,11 +14,13 @@ const form = useForm({
   validationSchema: authFormSchema,
 })
 
-const { mutate: loginMutate, isPending: loginPending } = useLoginUser()
-const { mutate: signupMutate, isPending: signupPending } = useCreateUser()
+const store = useAuthStore()
+const { setLoggedIn } = store
+
+const { mutateAsync: loginMutateAsync, isPending: loginPending } = useLoginUser()
+const { mutateAsync: signupMutateAsync, isPending: signupPending } = useCreateUser()
 
 type FormMode = 'login' | 'signup'
-
 const toggleForm = ref<FormMode>('signup')
 
 const errors = computed(() => form.errors.value)
@@ -26,23 +30,20 @@ const footerText = computed(() => {
   else return 'Not signed up? '
 })
 
-const onSubmit = form.handleSubmit((values) => {
-  const { username, password, confirmedPassword } = values
+const onSubmit = form.handleSubmit(async (values) => {
+  const mode = toggleForm.value
 
-  if (toggleForm.value === 'login')
-    loginMutate(
-      { username, password },
-      {
-        onSuccess: () => console.log('Logged in '),
-      },
-    )
-  if (toggleForm.value === 'signup')
-    signupMutate(
-      { username, password, confirmedPassword },
-      {
-        onSuccess: () => console.log('Signed up'),
-      },
-    )
+  if (mode === 'login') {
+    await loginMutateAsync(omit(values, ['confirmedPassword']))
+    setLoggedIn(true)
+    router.push('/upload')
+  }
+  if (mode === 'signup') {
+    await signupMutateAsync(values)
+    toggleForm.value = 'login'
+  }
+
+  form.setFieldValue('mode', mode)
   form.resetForm()
 })
 
