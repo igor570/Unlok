@@ -10,21 +10,23 @@ import { useAuthStore } from '@/stores'
 
 const router = useRouter()
 
-const form = useForm({
-  validationSchema: authFormSchema,
-})
-
 const store = useAuthStore()
 const { setLoggedIn } = store
 
 const { mutateAsync: loginMutateAsync, isPending: loginPending } = useLoginUser()
 const { mutateAsync: signupMutateAsync, isPending: signupPending } = useCreateUser()
 
-type FormMode = 'login' | 'signup'
-const toggleForm = ref<FormMode>('signup')
+const form = useForm({
+  validationSchema: authFormSchema,
+})
 
 const errors = computed(() => form.errors.value)
 const values = computed(() => form.values)
+
+type FormMode = 'login' | 'signup'
+
+const toggleForm = ref<FormMode>('signup')
+
 const footerText = computed(() => {
   if (toggleForm.value === 'signup') return 'Already signed up? '
   else return 'Not signed up? '
