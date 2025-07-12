@@ -2,7 +2,7 @@
 import { useForm, Field } from 'vee-validate'
 import { computed } from 'vue'
 import { messageFormSchema } from '@/types'
-import { useCreateMessage } from '@/composables/useCreateMessage'
+import { useCreateMessage } from '@/composables'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()

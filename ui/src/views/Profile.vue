@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/AuthStore'
+import { useAuthStore } from '@/stores'
 import corgiImg from '../assets/Corgi.jpg'
 
 interface ProfileProps {
