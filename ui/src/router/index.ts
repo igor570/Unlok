@@ -15,9 +15,10 @@ const router = createRouter({
       component: Auth,
     },
     {
-      path: '/download',
+      path: '/download/:id',
       name: 'download',
       component: Download,
+      props: true,
     },
     {
       path: '/history',

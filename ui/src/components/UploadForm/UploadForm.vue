@@ -3,7 +3,9 @@ import { useForm, Field } from 'vee-validate'
 import { computed } from 'vue'
 import { messageFormSchema } from '@/types'
 import { useCreateMessage } from '@/composables/useCreateMessage'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const form = useForm({
   validationSchema: messageFormSchema,
 })
@@ -14,7 +16,10 @@ const errors = computed(() => form.errors.value)
 const values = computed(() => form.values)
 
 const onSubmit = form.handleSubmit((values) => {
-  mutation.mutate(values)
+  // If the message is created, put the user to the completed section
+  mutation.mutate(values, {
+    onSuccess: () => router.push('complete'),
+  })
 })
 </script>
 

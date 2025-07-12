@@ -22,6 +22,8 @@ export const createMessage = async (formData: Message) => {
     }
 
     const data = await res.json()
+
+    //TODO: we should return the unique id for the message created
     return data
   } catch (e) {
     throw new Error(e instanceof Error ? e.message : String(e))
