@@ -10,14 +10,14 @@ const form = useForm({
   validationSchema: messageFormSchema,
 })
 
-const mutation = useCreateMessage()
+const { mutate, isPending } = useCreateMessage()
 
 const errors = computed(() => form.errors.value)
 const values = computed(() => form.values)
 
 const onSubmit = form.handleSubmit((values) => {
   // If the message is created, put the user to the completed section
-  mutation.mutate(values, {
+  mutate(values, {
     onSuccess: (data) => router.push({ name: 'complete', query: { id: data.id } }),
   })
 })
@@ -64,7 +64,10 @@ const onSubmit = form.handleSubmit((values) => {
       <div class="error" v-if="errors.message">{{ errors.message }}</div>
     </div>
     <!-- Submit -->
-    <button class="submit-btn" type="submit">Submit</button>
+    <button class="submit-btn" type="submit">
+      <Spinner :size="25" v-if="isPending" />
+      <span>Submit</span>
+    </button>
   </form>
 </template>
 
