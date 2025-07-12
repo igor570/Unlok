@@ -1,10 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/vue-query'
-import { useAuthStore } from '@/stores/AuthStore'
 import { baseURL } from '@/consts'
+import { useAuthStore } from '@/stores/AuthStore'
 import type { SignUpResponse, LoginResponse, UserDetails } from '@/types'
-
-const store = useAuthStore()
-const { setToken } = store
 
 const createUser = async ({
   username,
@@ -46,6 +43,8 @@ const loginUser = async ({
 }: Omit<UserDetails, 'confirmPassword'>): Promise<LoginResponse> => {
   if (!password || !username) throw new Error('Fields cannot be empty')
 
+  const store = useAuthStore()
+
   try {
     const res = await fetch(`${baseURL}/auth/login`, {
       method: 'POST',
@@ -62,7 +61,7 @@ const loginUser = async ({
 
     const data: LoginResponse = await res.json()
 
-    if (data.token) setToken(data.token)
+    if (data.token) store.setToken(data.token)
 
     return data
   } catch (e) {
