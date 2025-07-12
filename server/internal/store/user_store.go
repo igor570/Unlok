@@ -27,7 +27,7 @@ func NewUserStore(db *sql.DB, logger *log.Logger) *UserPgStore {
 }
 
 type UserStore interface {
-	SignUp(user User) (*User, error)
+	SignUp(user *User) error
 	Login(u *User) error
 
 	GetUserById(id int) (*User, error)
@@ -36,7 +36,7 @@ type UserStore interface {
 	DeleteUser(id int) error
 }
 
-func (s *UserPgStore) SignUp(u User) error {
+func (s *UserPgStore) SignUp(u *User) error {
 	hashedPassword, err := utils.HashPassword(u.Password)
 
 	if err != nil {

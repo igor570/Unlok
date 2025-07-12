@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/igor570/unlok/internal/handlers"
 	"github.com/igor570/unlok/internal/store"
 	"github.com/joho/godotenv"
 )
@@ -19,9 +20,9 @@ import (
  */
 
 type Application struct {
-	Logger *log.Logger
-
-	DB *sql.DB
+	Logger      *log.Logger
+	UserHandler *handlers.UserHandler
+	DB          *sql.DB
 }
 
 /*
@@ -44,14 +45,16 @@ func NewApplication() (*Application, error) {
 	}
 
 	// ... Create the stores
-	messageStore := store.NewMessageStore(pgDB, logger)
+	//messageStore := store.NewMessageStore(pgDB, logger)
 	userStore := store.NewUserStore(pgDB, logger)
 
 	// ... Create our Handlers
+	userHandler := handlers.NewUserHandler(userStore, logger)
 
 	app := &Application{
-		Logger: logger,
-		DB:     pgDB,
+		Logger:      logger,
+		UserHandler: userHandler,
+		DB:          pgDB,
 	}
 
 	return app, nil
