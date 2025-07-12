@@ -3,6 +3,7 @@ import { useForm, Field } from 'vee-validate'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authFormSchema } from '@/types'
+import { Spinner } from '@/components'
 import { useCreateUser, useLoginUser } from '@/composables'
 
 const router = useRouter()
@@ -11,8 +12,8 @@ const form = useForm({
   validationSchema: authFormSchema,
 })
 
-const { mutate: loginMutate } = useLoginUser()
-const { mutate: signupMutate } = useCreateUser()
+const { mutate: loginMutate, isPending: loginPending } = useLoginUser()
+const { mutate: signupMutate, isPending: signupPending } = useCreateUser()
 
 type FormMode = 'login' | 'signup'
 
@@ -93,15 +94,18 @@ const handleSkip = () => router.push('/')
       </Transition>
 
       <div v-if="toggleForm === 'signup'">
-        {{ footerText }}<span @click="toggleForm = 'login'">Login here</span>
+        {{ footerText }}<span class="toggle-label" @click="toggleForm = 'login'">Login here</span>
       </div>
 
       <div v-if="toggleForm === 'login'">
-        {{ footerText }}<span @click="toggleForm = 'signup'">Signup here</span>
+        {{ footerText }}<span class="toggle-label" @click="toggleForm = 'signup'">Signup here</span>
       </div>
       <!-- Submit -->
       <div class="button-group">
-        <button class="submit-btn" type="submit">Submit</button>
+        <button class="submit-btn" type="submit">
+          <Spinner :size="25" v-if="loginPending || signupPending" />
+          <span>Submit</span>
+        </button>
         <!-- Skip Button -->
         <button class="submit-btn-ghost" @click="handleSkip">Skip</button>
       </div>
@@ -189,7 +193,7 @@ input:focus {
   }
 }
 
-span {
+.toggle-label {
   color: rgb(76, 76, 216);
 
   &:hover {
