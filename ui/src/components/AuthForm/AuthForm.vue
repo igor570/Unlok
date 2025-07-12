@@ -11,8 +11,8 @@ const form = useForm({
   validationSchema: authFormSchema,
 })
 
-const loginMutate = useLoginUser()
-const signupMutate = useCreateUser()
+const { mutate: loginMutate } = useLoginUser()
+const { mutate: signupMutate } = useCreateUser()
 
 type FormMode = 'login' | 'signup'
 
@@ -29,14 +29,14 @@ const onSubmit = form.handleSubmit((values) => {
   const { username, password, confirmedPassword } = values
 
   if (toggleForm.value === 'login')
-    loginMutate.mutate(
+    loginMutate(
       { username, password },
       {
         onSuccess: () => console.log('Logged in '),
       },
     )
   if (toggleForm.value === 'signup')
-    signupMutate.mutate(
+    signupMutate(
       { username, password, confirmedPassword },
       {
         onSuccess: () => console.log('Signed up'),
