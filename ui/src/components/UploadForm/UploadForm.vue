@@ -4,6 +4,7 @@ import { computed } from 'vue'
 import { messageFormSchema } from '@/types'
 import { useCreateMessage } from '@/composables'
 import { useRouter } from 'vue-router'
+import { Spinner } from '@/components'
 
 const router = useRouter()
 const form = useForm({
@@ -11,9 +12,6 @@ const form = useForm({
 })
 
 const { mutateAsync, isPending } = useCreateMessage()
-
-const errors = computed(() => form.errors.value)
-const values = computed(() => form.values)
 
 const onSubmit = form.handleSubmit(async (values) => {
   const result = await mutateAsync(values)
@@ -31,9 +29,11 @@ const onSubmit = form.handleSubmit(async (values) => {
         name="identifier"
         type="text"
         placeholder="Give it a memorable name..."
-        v-model="values.identifier"
+        v-model="form.values.identifier"
       />
-      <div class="error" v-if="errors.identifier">{{ errors.identifier }}</div>
+      <div class="error" v-if="form.errors.value.identifier">
+        {{ form.errors.value.identifier }}
+      </div>
     </div>
     <!-- Subject Field -->
     <div class="form-group">
@@ -43,9 +43,9 @@ const onSubmit = form.handleSubmit(async (values) => {
         name="subject"
         type="text"
         placeholder="Enter your subject..."
-        v-model="values.subject"
+        v-model="form.values.subject"
       />
-      <div class="error" v-if="errors.subject">{{ errors.subject }}</div>
+      <div class="error" v-if="form.errors.value.subject">{{ form.errors.value.subject }}</div>
     </div>
 
     <!-- Message Field -->
@@ -57,9 +57,9 @@ const onSubmit = form.handleSubmit(async (values) => {
         name="message"
         type="text"
         placeholder="Enter your message..."
-        v-model="values.message"
+        v-model="form.values.message"
       />
-      <div class="error" v-if="errors.message">{{ errors.message }}</div>
+      <div class="error" v-if="form.errors.value.message">{{ form.errors.value.message }}</div>
     </div>
     <!-- Submit -->
     <button class="submit-btn" type="submit">

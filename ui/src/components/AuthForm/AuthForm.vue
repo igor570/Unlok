@@ -20,11 +20,7 @@ const form = useForm({
   validationSchema: authFormSchema,
 })
 
-const errors = computed(() => form.errors.value)
-const values = computed(() => form.values)
-
 type FormMode = 'login' | 'signup'
-
 const toggleForm = ref<FormMode>('signup')
 
 const footerText = computed(() => {
@@ -63,27 +59,15 @@ const handleSkip = () => router.push('/')
       <!-- Username Field -->
       <div class="form-group">
         <label for="username">Username</label>
-        <Field
-          id="username"
-          name="username"
-          type="text"
-          placeholder="Enter your username..."
-          v-model="values.username"
-        />
-        <div class="error" v-if="errors.username">{{ errors.username }}</div>
+        <Field id="username" name="username" type="text" placeholder="Enter your username..." />
+        <div class="error" v-if="form.errors.value.username">{{ form.errors.value.username }}</div>
       </div>
 
       <!-- Password Field -->
       <div class="form-group">
         <label for="password">Password</label>
-        <Field
-          id="password"
-          name="password"
-          type="password"
-          placeholder="Enter your Password..."
-          v-model="values.password"
-        />
-        <div class="error" v-if="errors.password">{{ errors.password }}</div>
+        <Field id="password" name="password" type="password" placeholder="Enter your Password..." />
+        <div class="error" v-if="form.errors.value.password">{{ form.errors.value.password }}</div>
       </div>
 
       <!-- Confirm Password field -->
@@ -94,10 +78,11 @@ const handleSkip = () => router.push('/')
             id="confirmedPassword"
             name="confirmedPassword"
             type="password"
-            placeholder="Enter your username..."
-            v-model="values.confirmedPassword"
+            placeholder="Confirm your password..."
           />
-          <div class="error" v-if="errors.confirmedPassword">{{ errors.confirmedPassword }}</div>
+          <div class="error" v-if="form.errors.value.confirmedPassword">
+            {{ form.errors.value.confirmedPassword }}
+          </div>
         </div>
       </Transition>
 
