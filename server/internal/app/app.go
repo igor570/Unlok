@@ -19,10 +19,9 @@ import (
  */
 
 type Application struct {
-	Logger       *log.Logger
-	MessageStore *store.MessageStore
-	UserStore    *store.UserStore
-	DB           *sql.DB
+	Logger *log.Logger
+
+	DB *sql.DB
 }
 
 /*
