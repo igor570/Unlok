@@ -24,6 +24,7 @@ export const createMessage = async (formData: Message) => {
     const data = await res.json()
 
     //TODO: we should return the unique id for the message created
+    // This will be consumed in Upload page, then passed to Complete page
     return data
   } catch (e) {
     throw new Error(e instanceof Error ? e.message : String(e))

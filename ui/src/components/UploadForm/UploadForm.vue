@@ -18,7 +18,7 @@ const values = computed(() => form.values)
 const onSubmit = form.handleSubmit((values) => {
   // If the message is created, put the user to the completed section
   mutation.mutate(values, {
-    onSuccess: () => router.push('complete'),
+    onSuccess: (data) => router.push({ name: 'complete', query: { id: data.id } }),
   })
 })
 </script>
