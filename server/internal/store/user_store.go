@@ -3,6 +3,8 @@ package store
 import (
 	"database/sql"
 	"log"
+
+	"github.com/igor570/unlok/internal/utils"
 )
 
 type User struct {
@@ -25,11 +27,57 @@ func NewUserStore(db *sql.DB, logger *log.Logger) *UserPgStore {
 }
 
 type UserStore interface {
+	SignUp(user User) (*User, error)
+	Login(u *User) error
+
 	GetUserById(id int) (*User, error)
 	GetUserByUsername(username string) (*User, error)
-	CreateUser(user User) (*User, error)
 	UpdateUser(user *User) error
 	DeleteUser(id int) error
+}
+
+func (s *UserPgStore) SignUp(u User) error {
+	hashedPassword, err := utils.HashPassword(u.Password)
+
+	if err != nil {
+		return err
+	}
+
+	query := `INSERT into users (username, password, profile_photo) VALUES ($1, $2, $3)`
+
+	_, err = s.db.Exec(
+		query,
+		u.Username,
+		hashedPassword,
+		u.ProfilePhoto,
+	)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *UserPgStore) Login(u *User) error {
+	var hashedPassword string
+
+	// Get the hashed password from the DB for the given username
+	query := `SELECT password FROM users WHERE username = $1`
+
+	err := s.db.QueryRow(query, u.Username).Scan(&hashedPassword)
+
+	if err != nil {
+		return err // user not found or DB error
+	}
+
+	// Compare the hashed password from DB with the plaintext password from the request
+	err = utils.ComparePasswords(hashedPassword, u.Password)
+
+	if err != nil {
+		return err // password does not match
+	}
+
+	return nil // login successful
 }
 
 func (s *UserPgStore) GetUserById(id int) (*User, error) {
@@ -38,11 +86,6 @@ func (s *UserPgStore) GetUserById(id int) (*User, error) {
 }
 
 func (s *UserPgStore) GetUserByUsername(username string) (*User, error) {
-	// TODO: Implement database logic
-	return nil, nil
-}
-
-func (s *UserPgStore) CreateUser(user User) (*User, error) {
 	// TODO: Implement database logic
 	return nil, nil
 }
