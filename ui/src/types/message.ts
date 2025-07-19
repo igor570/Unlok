@@ -35,6 +35,6 @@ export const messageFormSchema = toTypedSchema(
     identifier: z.string().min(2).max(25),
     subject: z.string().min(2).max(50),
     message: z.string().min(2),
-    password: z.string().min(4),
+    password: z.string().min(4).max(4),
   }),
 )
