@@ -1,13 +1,14 @@
 import { baseURL } from '@/consts'
 import type { GetMessageResponse, Message } from '@/types'
 import { useQuery } from '@tanstack/vue-query'
-import type { MaybeRefOrGetter } from 'vue'
+import { toValue, type MaybeRefOrGetter } from 'vue'
 
 export const getMessage = async (id: MaybeRefOrGetter<string>) => {
+  const idParam = toValue(id)
   if (!id) throw new Error('id is required to get message')
 
   try {
-    const res = await fetch(`${baseURL}/message/${id}`, {
+    const res = await fetch(`${baseURL}/message/${idParam}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
