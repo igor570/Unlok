@@ -1,5 +1,4 @@
 //TODO: Use this to test on FE, move to backend later
-
 // Character to emoji mapping for passwords
 const charToEmoji: Record<string, string> = Object.freeze({
   a: '😀',
@@ -104,39 +103,38 @@ const emojiToChar: Record<string, string> = Object.fromEntries(
   Object.entries(charToEmoji).map(([char, emoji]) => [emoji, char]),
 )
 
-// Simple XOR encryption/decryption
+// Simple password-based encryption - shift by number of emojis
+export const simpleEncrypt = (text: string, password: string): string => {
+  const shift = password.length // Use password length as shift amount
 
-function toBase64Unicode(str: string): string {
-  return btoa(unescape(encodeURIComponent(str)))
+  const result = text
+    .split('')
+    .map((char) => {
+      const original = char.charCodeAt(0)
+      const shifted = original + shift
+      const newChar = String.fromCharCode(shifted)
+      return newChar
+    })
+    .join('')
+
+  return result
 }
 
-function fromBase64Unicode(str: string): string {
-  return decodeURIComponent(escape(atob(str)))
-}
+export const simpleDecrypt = (encryptedText: string, emojiPassword: string): string => {
+  // Count emojis directly instead of converting to characters first
+  const shift = Array.from(emojiPassword).length // Count actual emojis
 
-export const xorEncrypt = (text: string, password: string): string => {
-  let result = ''
-  for (let i = 0; i < text.length; i++) {
-    const textChar = text.charCodeAt(i)
-    const passChar = password.charCodeAt(i % password.length)
-    result += String.fromCharCode(textChar ^ passChar)
-  }
-  return toBase64Unicode(result) // Unicode-safe base64 encoding
-}
+  const result = encryptedText
+    .split('')
+    .map((char) => {
+      const original = char.charCodeAt(0)
+      const shifted = original - shift
+      const newChar = String.fromCharCode(shifted)
+      return newChar
+    })
+    .join('')
 
-export const xorDecrypt = (encryptedText: string, password: string): string => {
-  try {
-    const decoded = fromBase64Unicode(encryptedText) // Unicode-safe base64 decoding
-    let result = ''
-    for (let i = 0; i < decoded.length; i++) {
-      const encChar = decoded.charCodeAt(i)
-      const passChar = password.charCodeAt(i % password.length)
-      result += String.fromCharCode(encChar ^ passChar)
-    }
-    return result
-  } catch (e) {
-    throw new Error('Invalid encrypted text or password')
-  }
+  return result
 }
 
 // Convert password to emojis for display
@@ -156,19 +154,32 @@ export const emojisToPassword = (emojiString: string): string => {
 // Main encryption function
 export const encryptMessage = (
   message: string,
-  password: string,
+  emojiPassword: string, // Change to accept emojis directly
 ): {
   encryptedMessage: string
   passwordEmojis: string
   originalPassword: string
 } => {
-  const encryptedMessage = xorEncrypt(message, password)
-  const passwordEmojis = passwordToEmojis(password)
+  // Count emojis directly instead of converting first
+  const shift = Array.from(emojiPassword).length
+
+  const encryptedMessage = message
+    .split('')
+    .map((char) => {
+      const original = char.charCodeAt(0)
+      const shifted = original + shift
+      const newChar = String.fromCharCode(shifted)
+      return newChar
+    })
+    .join('')
+
+  // Convert emojis to password for storage if needed
+  const originalPassword = emojisToPassword(emojiPassword)
 
   return {
     encryptedMessage,
-    passwordEmojis,
-    originalPassword: password,
+    passwordEmojis: emojiPassword,
+    originalPassword,
   }
 }
 
@@ -182,8 +193,8 @@ export const decryptMessage = (
   error?: string
 } => {
   try {
-    const password = emojisToPassword(inputEmojis)
-    const decryptedMessage = xorDecrypt(encryptedMessage, password)
+    // Pass the emojis directly to simpleDecrypt
+    const decryptedMessage = simpleDecrypt(encryptedMessage, inputEmojis)
 
     return {
       success: true,

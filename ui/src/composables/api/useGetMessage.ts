@@ -1,7 +1,7 @@
 import { baseURL } from '@/consts'
 import type { GetMessageResponse, Message } from '@/types'
 import { useQuery } from '@tanstack/vue-query'
-import { toValue, type MaybeRefOrGetter } from 'vue'
+import { computed, toValue, type MaybeRefOrGetter, type Ref } from 'vue'
 
 export const getMessage = async (id: MaybeRefOrGetter<string>, givenPassword: string) => {
   const idParam = toValue(id)
@@ -28,10 +28,12 @@ export const getMessage = async (id: MaybeRefOrGetter<string>, givenPassword: st
   }
 }
 
-export const useGetMessage = (id: MaybeRefOrGetter<string>, givenPassword: string) => {
+export const useGetMessage = (id: MaybeRefOrGetter<string>, givenPassword: Ref<string, string>) => {
+  const idParam = toValue(id)
+
   return useQuery({
-    queryKey: ['messageId', id],
-    queryFn: () => getMessage(id, givenPassword),
-    enabled: !!id && !!givenPassword && givenPassword.length >= 4,
+    queryKey: ['messageId', idParam, givenPassword],
+    queryFn: () => getMessage(idParam, toValue(givenPassword)),
+    enabled: computed(() => !!idParam && !!toValue(givenPassword)),
   })
 }

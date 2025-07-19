@@ -1,26 +1,43 @@
 <script setup lang="ts">
-import { DownloadForm } from '@/components'
-// import { useGetMessage } from '@/composables'
+import { DownloadForm, Spinner } from '@/components'
+import { useEncryptMessage, useGetMessage } from '@/composables'
 import { computed, ref, watch } from 'vue'
+import { emojisToPassword } from '@/utils/emoji'
 
 const props = defineProps<{ id: string }>()
-const idRef = computed(() => props.id)
+
+const { decrypt } = useEncryptMessage()
 
 const givenPassword = ref('')
 const criteraMet = ref(false)
+const decryptedMsg = ref('')
 
-watch(givenPassword, () => {
-  console.log('PWD from the form!: ', givenPassword.value)
+const idRef = computed(() => props.id)
+
+const { data, isSuccess, isLoading, error } = useGetMessage(idRef, givenPassword)
+
+watch([isSuccess, data, givenPassword], () => {
+  if (isSuccess.value && data.value) {
+    const result = decrypt(data.value.message, givenPassword.value)
+    if (result.success) {
+      criteraMet.value = true
+      decryptedMsg.value = result.message || ''
+    } else {
+      criteraMet.value = false
+      decryptedMsg.value = ''
+    }
+  } else {
+    decryptedMsg.value = ''
+    criteraMet.value = false
+  }
 })
-
-// const { data, isLoading, error } = useGetMessage(idRef, givenPassword.value)
 </script>
 
 <template>
-  <!-- <div v-if="error" class="error">{{ error.message }}</div>
+  <div v-if="error" class="error">{{ error.message }}</div>
   <div v-if="isLoading">
     <Spinner />
-  </div> -->
+  </div>
 
   <div>Download Page</div>
 
@@ -31,8 +48,8 @@ watch(givenPassword, () => {
     />
   </section>
   <section class="message-content" v-if="criteraMet">
-    <!-- <div class="subject">{{ data?.subject }}</div>
-    <div class="message">{{ data?.message }}</div> -->
+    <div class="subject">{{ data?.subject }}</div>
+    <div class="message">{{ decryptedMsg }}</div>
   </section>
 </template>
 
