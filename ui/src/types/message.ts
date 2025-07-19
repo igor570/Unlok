@@ -38,3 +38,12 @@ export const messageFormSchema = toTypedSchema(
     password: z.string().min(4).max(4),
   }),
 )
+
+export const passwordFormSchema = toTypedSchema(
+  z.object({
+    emoji1: z.string().min(1, 'Required').emoji('Must be an emoji'),
+    emoji2: z.string().min(1, 'Required').emoji('Must be an emoji'),
+    emoji3: z.string().min(1, 'Required').emoji('Must be an emoji'),
+    emoji4: z.string().min(1, 'Required').emoji('Must be an emoji'),
+  }),
+)

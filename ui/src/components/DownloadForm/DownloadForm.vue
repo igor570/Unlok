@@ -1,35 +1,48 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, defineEmits } from 'vue'
+import { passwordFormSchema } from '@/types'
+import { useForm, Field } from 'vee-validate'
 
-const hasPasswordSupplied = ref(false)
-const isPasswordCorrect = ref(false)
+interface DownloadFormEmits {
+  submit: [password: string]
+  criteraMet: [boolean]
+}
+
+const emits = defineEmits<DownloadFormEmits>()
+
+const form = useForm({
+  validationSchema: passwordFormSchema,
+})
 
 const emoji1 = ref('')
 const emoji2 = ref('')
 const emoji3 = ref('')
 const emoji4 = ref('')
 
-const criteraMet = computed(() => hasPasswordSupplied && isPasswordCorrect)
 const givenPassword = computed(() => `${emoji1.value}${emoji2.value}${emoji3.value}${emoji4.value}`)
 
-defineExpose({
-  criteraMet,
-  givenPassword,
-})
-
-function onEmojiSubmit() {
-  hasPasswordSupplied.value = true
+async function onEmojiSubmit() {
+  const result = await form.validate()
+  if (result.valid) {
+    emits('criteraMet', true)
+    emits('submit', givenPassword.value)
+  }
 }
 </script>
 
 <template>
-  <form @submit.prevent="onEmojiSubmit">
+  <form class="download-form" @submit.prevent="onEmojiSubmit">
+    <div>Please input the password to see the message</div>
     <div class="emoji-inputs">
-      <input v-model="emoji1" maxlength="2" placeholder="❓" />
-      <input v-model="emoji2" maxlength="2" placeholder="❓" />
-      <input v-model="emoji3" maxlength="2" placeholder="❓" />
-      <input v-model="emoji4" maxlength="2" placeholder="❓" />
+      <Field name="emoji1" v-model="emoji1" maxlength="2" placeholder="❓" as="input" />
+      <Field name="emoji2" v-model="emoji2" maxlength="2" placeholder="❓" as="input" />
+      <Field name="emoji3" v-model="emoji3" maxlength="2" placeholder="❓" as="input" />
+      <Field name="emoji4" v-model="emoji4" maxlength="2" placeholder="❓" as="input" />
     </div>
+    <div class="error" v-if="form.errors.value.emoji1">{{ form.errors.value.emoji1 }}</div>
+    <div class="error" v-if="form.errors.value.emoji2">{{ form.errors.value.emoji2 }}</div>
+    <div class="error" v-if="form.errors.value.emoji3">{{ form.errors.value.emoji3 }}</div>
+    <div class="error" v-if="form.errors.value.emoji4">{{ form.errors.value.emoji4 }}</div>
     <button type="submit">Submit</button>
   </form>
 </template>
@@ -38,8 +51,9 @@ function onEmojiSubmit() {
 .download-form {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 1rem;
-  width: 300px;
+  width: 400px;
   margin: 0 auto;
   padding: 2rem;
   background: #222;
@@ -72,20 +86,23 @@ button {
   color: #fff;
   transition: background 0.2s;
 }
+
 button:hover {
   background: #4f46e5;
 }
 
-.message,
-.subject,
 .error {
+  color: rgb(224, 88, 88);
+}
+
+.message,
+.subject {
   color: white;
 }
 
 .emoji-inputs {
   display: flex;
   gap: 0.5rem;
-  padding: 2px;
   margin-bottom: 1rem;
 }
 </style>
