@@ -8,7 +8,7 @@ const { data, isLoading, error } = useGetMessage(id)
 </script>
 
 <template>
-  <div v-if="error">{{ error.message }}</div>
+  <div v-if="error" class="error">{{ error.message }}</div>
   <div v-if="isLoading">
     <Spinner />
   </div>
@@ -20,7 +20,8 @@ const { data, isLoading, error } = useGetMessage(id)
 
 <style scoped>
 .message,
-.subject {
+.subject,
+.error {
   color: white;
 }
 </style>

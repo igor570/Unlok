@@ -30,5 +30,6 @@ export const useGetMessage = (id: string) => {
   return useQuery({
     queryKey: ['messageId', id],
     queryFn: () => getMessage(id),
+    enabled: !!id,
   })
 }
