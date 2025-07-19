@@ -1,11 +1,16 @@
 import { baseURL } from '@/consts'
 import { useMutation } from '@tanstack/vue-query'
 import type { Message } from '@/types'
+import { useAuthStore } from '@/stores'
+import { storeToRefs } from 'pinia'
 
 export const createMessage = async (formData: Message) => {
   const { identifier, subject, message } = formData
 
   if (!identifier || !subject || !message) throw new Error('All fields required')
+
+  const store = useAuthStore()
+  const { user } = storeToRefs(store)
 
   try {
     const res = await fetch(`${baseURL}/message`, {
@@ -13,7 +18,13 @@ export const createMessage = async (formData: Message) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ identifier, subject, message }),
+      body: JSON.stringify({
+        id: crypto.randomUUID(),
+        user_id: user.value?.id ?? '',
+        identifier,
+        subject,
+        message,
+      }),
     })
 
     if (!res.ok) {

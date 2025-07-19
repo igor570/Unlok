@@ -6,11 +6,11 @@ import (
 )
 
 type Message struct {
-	Id         string `json:"id"`
-	UserId     string `json:"userId"`
-	Identifier string `json:"identifier"`
-	Subject    string `json:"subject"`
-	Message    string `json:"message"`
+	Id         string  `json:"id"`
+	UserId     *string `json:"user_id,omitempty"`
+	Identifier string  `json:"identifier"`
+	Subject    string  `json:"subject"`
+	Message    string  `json:"message"`
 }
 
 type MessagePgStore struct {
@@ -44,12 +44,27 @@ func (s *MessagePgStore) GetMessage(messageId string) ([]*Message, error) {
 
 func (s *MessagePgStore) GetAllMessage(userId string) (*Message, error) {
 	// TODO: Implement database logic
+
 	return nil, nil
 }
 
 func (s *MessagePgStore) CreateMessage(message *Message) (*Message, error) {
-	// TODO: Implement database logic
-	return nil, nil
+	query := `INSERT into messages (id, userId, identifier, subject, message) VALUES ($1, $2, $3, $4, $5)`
+
+	_, err := s.db.Exec(
+		query,
+		message.Id,
+		message.UserId,
+		message.Identifier,
+		message.Subject,
+		message.Message,
+	)
+
+	if err != nil {
+		return nil, err // Return the error for proper error handling
+	}
+
+	return message, nil
 }
 
 func (s *MessagePgStore) UpdateMessage(message *Message) error {

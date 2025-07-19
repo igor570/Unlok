@@ -32,8 +32,12 @@ func SetupRoutes(app *app.Application) *chi.Mux {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
+	//Auth
 	r.Post("/auth/create", app.UserHandler.SignUp)
 	r.Post("/auth/login", app.UserHandler.Login)
+
+	//Messages
+	r.Post("/message", app.MessageHandler.CreateMessage)
 
 	r.Get("/health", app.HealthCheck)
 

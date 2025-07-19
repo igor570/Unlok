@@ -20,9 +20,10 @@ import (
  */
 
 type Application struct {
-	Logger      *log.Logger
-	UserHandler *handlers.UserHandler
-	DB          *sql.DB
+	Logger         *log.Logger
+	UserHandler    *handlers.UserHandler
+	MessageHandler *handlers.MessageHandler
+	DB             *sql.DB
 }
 
 /*
@@ -45,16 +46,18 @@ func NewApplication() (*Application, error) {
 	}
 
 	// ... Create the stores
-	//messageStore := store.NewMessageStore(pgDB, logger)
 	userStore := store.NewUserStore(pgDB, logger)
+	messageStore := store.NewMessageStore(pgDB, logger)
 
 	// ... Create our Handlers
 	userHandler := handlers.NewUserHandler(userStore, logger)
+	messageHandler := handlers.NewMessageHandler(messageStore, logger)
 
 	app := &Application{
-		Logger:      logger,
-		UserHandler: userHandler,
-		DB:          pgDB,
+		Logger:         logger,
+		UserHandler:    userHandler,
+		MessageHandler: messageHandler,
+		DB:             pgDB,
 	}
 
 	return app, nil
