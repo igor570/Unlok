@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import Spinner from '@/components/Spinner/Spinner.vue'
 import { useGetMessage } from '@/composables'
+import { computed } from 'vue'
 
-const { id } = defineProps<{ id: string }>()
+const props = defineProps<{ id: string }>()
+const idRef = computed(() => props.id)
 
-const { data, isLoading, error } = useGetMessage(id)
+const { data, isLoading, error } = useGetMessage(idRef)
 </script>
 
 <template>

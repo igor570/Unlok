@@ -1,8 +1,9 @@
 import { baseURL } from '@/consts'
 import type { GetMessageResponse, Message } from '@/types'
 import { useQuery } from '@tanstack/vue-query'
+import type { MaybeRefOrGetter } from 'vue'
 
-export const getMessage = async (id: string) => {
+export const getMessage = async (id: MaybeRefOrGetter<string>) => {
   if (!id) throw new Error('id is required to get message')
 
   try {
@@ -26,7 +27,7 @@ export const getMessage = async (id: string) => {
   }
 }
 
-export const useGetMessage = (id: string) => {
+export const useGetMessage = (id: MaybeRefOrGetter<string>) => {
   return useQuery({
     queryKey: ['messageId', id],
     queryFn: () => getMessage(id),
