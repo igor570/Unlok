@@ -13,6 +13,14 @@ type Message struct {
 	Message    string  `json:"message"`
 }
 
+// What we'll send back, since it doesn't hold a userId & indentifier
+// This is when a anonymous user downloads a message
+type AnonMessageResponse struct {
+	Id      string `json:"id"`
+	Subject string `json:"subject"`
+	Message string `json:"message"`
+}
+
 type MessagePgStore struct {
 	db     *sql.DB
 	logger *log.Logger
@@ -26,23 +34,36 @@ func NewMessageStore(db *sql.DB, logger *log.Logger) *MessagePgStore {
 }
 
 type MessageStore interface {
-	GetMessage(messageId string) ([]*Message, error)
+	GetMessage(messageId string) (*Message, error)
 	CreateMessage(message *Message) (*Message, error)
 	UpdateMessage(message *Message) error
 	DeleteMessage(userId, messageId string) error
 
 	// For history fetching
-	GetAllMessage(userId string) (*Message, error)
+	GetAllMessage(userId string) ([]*Message, error)
 }
 
 // CRUD
 
-func (s *MessagePgStore) GetMessage(messageId string) ([]*Message, error) {
-	// TODO: Implement database logic
-	return nil, nil
+func (s *MessagePgStore) GetMessage(messageId string) (*Message, error) {
+	var message Message
+
+	query := `SELECT id, userid, identifier, subject, message FROM messages WHERE id = $1`
+
+	err := s.db.QueryRow(query, messageId).Scan(&message.Id, &message.UserId, &message.Identifier, &message.Subject, &message.Message)
+
+	if err != nil {
+		log.Printf("DB error: %v", err)
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &message, nil
 }
 
-func (s *MessagePgStore) GetAllMessage(userId string) (*Message, error) {
+func (s *MessagePgStore) GetAllMessage(userId string) ([]*Message, error) {
 	// TODO: Implement database logic
 
 	return nil, nil

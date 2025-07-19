@@ -7,6 +7,13 @@ export interface Message {
   message: string
 }
 
+export interface GetMessageResponse {
+  id: string
+  identifier: string
+  subject: string
+  message: string
+}
+
 // What we receive from the API
 export interface CreateMessageResponse {
   message_id: string

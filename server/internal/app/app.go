@@ -64,5 +64,6 @@ func NewApplication() (*Application, error) {
 }
 
 func (a *Application) HealthCheck(w http.ResponseWriter, r *http.Request) {
+	a.Logger.Println("HEALTHY")
 	fmt.Fprintf(w, "Status is available")
 }

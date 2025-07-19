@@ -37,6 +37,7 @@ func SetupRoutes(app *app.Application) *chi.Mux {
 	r.Post("/auth/login", app.UserHandler.Login)
 
 	//Messages
+	r.Get("/message/{id}", app.MessageHandler.GetMessage)
 	r.Post("/message", app.MessageHandler.CreateMessage)
 
 	r.Get("/health", app.HealthCheck)

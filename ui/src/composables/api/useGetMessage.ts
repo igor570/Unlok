@@ -1,8 +1,8 @@
+import { baseURL } from '@/consts'
+import type { GetMessageResponse, Message } from '@/types'
 import { useQuery } from '@tanstack/vue-query'
 
-const baseURL = import.meta.env.VITE_API_URL
-
-export const getMessage = async (id: string | number) => {
+export const getMessage = async (id: string) => {
   if (!id) throw new Error('id is required to get message')
 
   try {
@@ -18,15 +18,15 @@ export const getMessage = async (id: string | number) => {
       throw new Error(error || 'Failed to get message')
     }
 
-    //TODO: expecting message to be returned here
-    const data = await res.json()
+    const data: GetMessageResponse = await res.json()
+
     return data
   } catch (e) {
     throw new Error(e instanceof Error ? e.message : String(e))
   }
 }
 
-export const useGetMessage = (id: string | number) => {
+export const useGetMessage = (id: string) => {
   return useQuery({
     queryKey: ['messageId', id],
     queryFn: () => getMessage(id),

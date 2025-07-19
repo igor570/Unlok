@@ -34,9 +34,6 @@ export const createMessage = async (formData: Message) => {
 
     const data: CreateMessageResponse = await res.json()
 
-    //TODO: we should return the unique id for the message created
-    // This will be consumed in Upload page, then passed to Complete page
-
     const mappedData: MappedMessageResponse = {
       messageId: data.message_id,
     }

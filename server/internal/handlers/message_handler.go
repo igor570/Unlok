@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/igor570/unlok/internal/store"
 	"github.com/igor570/unlok/internal/utils"
 )
@@ -29,6 +30,39 @@ func NewMessageHandler(messageStore store.MessageStore, logger *log.Logger) *Mes
 /*
  * CRUD Operations
  */
+
+func (mh *MessageHandler) GetMessage(w http.ResponseWriter, r *http.Request) {
+	messageId := chi.URLParam(r, "id")
+
+	if messageId == "" {
+		utils.WriteJSON(w, http.StatusBadRequest, utils.Envelope{"Error": "Missing message id"})
+		return
+	}
+
+	foundMessage, err := mh.messageStore.GetMessage(messageId)
+
+	if err != nil {
+		mh.logger.Printf("ERROR: Could not fetch message %v", err)
+		utils.WriteJSON(w, http.StatusInternalServerError, utils.Envelope{"Error": "Could not fetch message"})
+		return
+	}
+
+	if foundMessage == nil {
+		utils.WriteJSON(w, http.StatusNotFound, utils.Envelope{"Error": "Message not found"})
+		return
+	}
+
+	// Create a response struct without userId
+	resp := store.AnonMessageResponse{
+		Id:      foundMessage.Id,
+		Subject: foundMessage.Subject,
+		Message: foundMessage.Message,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(resp)
+}
 
 func (mh *MessageHandler) CreateMessage(w http.ResponseWriter, r *http.Request) {
 	var message store.Message

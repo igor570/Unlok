@@ -7,7 +7,7 @@ const route = useRoute()
 const id = route.query.id
 
 const shareableLink = computed(() =>
-  id ? `www.unlok.com/download/${id}` : 'No id found for message',
+  id ? `http://localhost:5173/download/${id}` : 'No id found for message',
 )
 
 const { copy, copied, isSupported } = useClipboard()
