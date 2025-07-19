@@ -61,6 +61,18 @@ const onSubmit = form.handleSubmit(async (values) => {
       />
       <div class="error" v-if="form.errors.value.message">{{ form.errors.value.message }}</div>
     </div>
+    <!-- Password Field -->
+    <div class="form-group">
+      <label for="password">password</label>
+      <Field
+        id="password"
+        name="password"
+        type="text"
+        placeholder="Enter a password in emojis 😎"
+        v-model="form.values.password"
+      />
+      <div class="error" v-if="form.errors.value.password">{{ form.errors.value.password }}</div>
+    </div>
     <!-- Submit -->
     <button class="submit-btn" type="submit">
       <Spinner :size="25" v-if="isPending" />

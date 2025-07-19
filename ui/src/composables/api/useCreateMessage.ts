@@ -1,11 +1,11 @@
 import { baseURL } from '@/consts'
 import { useMutation } from '@tanstack/vue-query'
-import type { CreateMessageResponse, MappedMessageResponse, Message } from '@/types'
+import type { CreateMessageResponse, MappedMessageResponse, Message, UploadFormData } from '@/types'
 import { useAuthStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import { useEncryptMessage } from '@/composables/useEncryptMessage'
 
-export const createMessage = async (formData: Message) => {
+export const createMessage = async (formData: UploadFormData) => {
   const { identifier, subject, message, password } = formData
 
   if (!identifier || !subject || !message) throw new Error('All fields required')
@@ -53,7 +53,6 @@ export const createMessage = async (formData: Message) => {
 
 export const useCreateMessage = () => {
   return useMutation({
-    mutationFn: ({ identifier, subject, message }: Message) =>
-      createMessage({ identifier, subject, message }),
+    mutationFn: (data: UploadFormData) => createMessage(data),
   })
 }
