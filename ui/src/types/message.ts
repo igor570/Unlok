@@ -5,6 +5,7 @@ export interface Message {
   identifier: string
   subject: string
   message: string
+  password?: string
 }
 
 export interface GetMessageResponse {
