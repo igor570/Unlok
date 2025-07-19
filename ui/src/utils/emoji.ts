@@ -105,6 +105,15 @@ const emojiToChar: Record<string, string> = Object.fromEntries(
 )
 
 // Simple XOR encryption/decryption
+
+function toBase64Unicode(str: string): string {
+  return btoa(unescape(encodeURIComponent(str)))
+}
+
+function fromBase64Unicode(str: string): string {
+  return decodeURIComponent(escape(atob(str)))
+}
+
 export const xorEncrypt = (text: string, password: string): string => {
   let result = ''
   for (let i = 0; i < text.length; i++) {
@@ -112,12 +121,12 @@ export const xorEncrypt = (text: string, password: string): string => {
     const passChar = password.charCodeAt(i % password.length)
     result += String.fromCharCode(textChar ^ passChar)
   }
-  return btoa(result) // Base64 encode the result
+  return toBase64Unicode(result) // Unicode-safe base64 encoding
 }
 
 export const xorDecrypt = (encryptedText: string, password: string): string => {
   try {
-    const decoded = atob(encryptedText) // Base64 decode first
+    const decoded = fromBase64Unicode(encryptedText) // Unicode-safe base64 decoding
     let result = ''
     for (let i = 0; i < decoded.length; i++) {
       const encChar = decoded.charCodeAt(i)
@@ -186,27 +195,4 @@ export const decryptMessage = (
       error: 'Decryption failed. Check your emoji password.',
     }
   }
-}
-
-// Example usage
-console.log('=== Encryption Example ===')
-const originalMessage = 'This is a secret message!'
-const password = 'hello123'
-
-console.log('Original message:', originalMessage)
-console.log('Password:', password)
-
-const encrypted = encryptMessage(originalMessage, password)
-console.log('Encrypted message:', encrypted.encryptedMessage)
-console.log('Password as emojis:', encrypted.passwordEmojis)
-
-console.log('\n=== Decryption Example ===')
-console.log('Encrypted message:', encrypted.encryptedMessage)
-console.log('User inputs emojis:', encrypted.passwordEmojis)
-
-const decrypted = decryptMessage(encrypted.encryptedMessage, encrypted.passwordEmojis)
-if (decrypted.success) {
-  console.log('Decrypted message:', decrypted.message)
-} else {
-  console.log('Error:', decrypted.error)
 }
