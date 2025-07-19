@@ -49,21 +49,24 @@ func (s *MessagePgStore) GetAllMessage(userId string) (*Message, error) {
 }
 
 func (s *MessagePgStore) CreateMessage(message *Message) (*Message, error) {
-	query := `INSERT into messages (id, userId, identifier, subject, message) VALUES ($1, $2, $3, $4, $5)`
+	var id string
 
-	_, err := s.db.Exec(
+	query := `INSERT INTO messages (id, userId, identifier, subject, message) VALUES ($1, $2, $3, $4, $5) RETURNING id`
+
+	err := s.db.QueryRow(
 		query,
 		message.Id,
 		message.UserId,
 		message.Identifier,
 		message.Subject,
 		message.Message,
-	)
+	).Scan(&id)
 
 	if err != nil {
-		return nil, err // Return the error for proper error handling
+		return nil, err
 	}
 
+	message.Id = id
 	return message, nil
 }
 

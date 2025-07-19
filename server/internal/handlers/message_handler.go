@@ -47,7 +47,7 @@ func (mh *MessageHandler) CreateMessage(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	_, err = mh.messageStore.CreateMessage(&message)
+	createdMessage, err := mh.messageStore.CreateMessage(&message)
 
 	if err != nil {
 		mh.logger.Printf("ERROR: Could not create message %v", err)
@@ -55,5 +55,6 @@ func (mh *MessageHandler) CreateMessage(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	utils.WriteJSON(w, http.StatusCreated, utils.Envelope{"Success": "Created user"})
+	// Return the created message (including its id) in the response
+	utils.WriteJSON(w, http.StatusCreated, utils.Envelope{"message_id": createdMessage.Id})
 }

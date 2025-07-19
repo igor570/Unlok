@@ -15,7 +15,7 @@ const { mutateAsync, isPending } = useCreateMessage()
 
 const onSubmit = form.handleSubmit(async (values) => {
   const result = await mutateAsync(values)
-  router.push({ name: 'complete', query: { id: result.id } })
+  router.push({ name: 'complete', query: { id: result.messageId } })
 })
 </script>
 
@@ -51,7 +51,7 @@ const onSubmit = form.handleSubmit(async (values) => {
     <!-- Message Field -->
     <div class="form-group">
       <label for="message">message</label>
-      <textarea
+      <Field
         class="textarea-message"
         id="message"
         name="message"

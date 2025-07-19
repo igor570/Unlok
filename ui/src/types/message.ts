@@ -7,6 +7,15 @@ export interface Message {
   message: string
 }
 
+// What we receive from the API
+export interface CreateMessageResponse {
+  message_id: string
+}
+
+export interface MappedMessageResponse {
+  messageId: string
+}
+
 export const messageFormSchema = toTypedSchema(
   z.object({
     identifier: z.string().min(2).max(25),

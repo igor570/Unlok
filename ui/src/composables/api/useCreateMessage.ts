@@ -1,6 +1,6 @@
 import { baseURL } from '@/consts'
 import { useMutation } from '@tanstack/vue-query'
-import type { Message } from '@/types'
+import type { CreateMessageResponse, MappedMessageResponse, Message } from '@/types'
 import { useAuthStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 
@@ -20,7 +20,7 @@ export const createMessage = async (formData: Message) => {
       },
       body: JSON.stringify({
         id: crypto.randomUUID(),
-        user_id: user.value?.id ?? '',
+        user_id: user.value?.id ?? null,
         identifier,
         subject,
         message,
@@ -32,11 +32,16 @@ export const createMessage = async (formData: Message) => {
       throw new Error(error || 'Failed to create user')
     }
 
-    const data = await res.json()
+    const data: CreateMessageResponse = await res.json()
 
     //TODO: we should return the unique id for the message created
     // This will be consumed in Upload page, then passed to Complete page
-    return data
+
+    const mappedData: MappedMessageResponse = {
+      messageId: data.message_id,
+    }
+
+    return mappedData
   } catch (e) {
     throw new Error(e instanceof Error ? e.message : String(e))
   }
