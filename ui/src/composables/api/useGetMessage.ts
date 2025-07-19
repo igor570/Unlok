@@ -1,9 +1,9 @@
 import { baseURL } from '@/consts'
 import type { GetMessageResponse, Message } from '@/types'
 import { useQuery } from '@tanstack/vue-query'
-import { toValue, type MaybeRefOrGetter } from 'vue'
+import { computed, toValue, type MaybeRefOrGetter, type Ref } from 'vue'
 
-export const getMessage = async (id: MaybeRefOrGetter<string>) => {
+export const getMessage = async (id: MaybeRefOrGetter<string>, givenPassword: string) => {
   const idParam = toValue(id)
   if (!id) throw new Error('id is required to get message')
 
@@ -28,10 +28,12 @@ export const getMessage = async (id: MaybeRefOrGetter<string>) => {
   }
 }
 
-export const useGetMessage = (id: MaybeRefOrGetter<string>) => {
+export const useGetMessage = (id: MaybeRefOrGetter<string>, givenPassword: Ref<string, string>) => {
+  const idParam = toValue(id)
+
   return useQuery({
-    queryKey: ['messageId', id],
-    queryFn: () => getMessage(id),
-    enabled: !!id,
+    queryKey: ['messageId', idParam, givenPassword],
+    queryFn: () => getMessage(idParam, toValue(givenPassword)),
+    enabled: computed(() => !!idParam && !!toValue(givenPassword)),
   })
 }

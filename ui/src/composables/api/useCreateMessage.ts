@@ -1,16 +1,23 @@
 import { baseURL } from '@/consts'
 import { useMutation } from '@tanstack/vue-query'
-import type { CreateMessageResponse, MappedMessageResponse, Message } from '@/types'
+import type { CreateMessageResponse, MappedMessageResponse, Message, UploadFormData } from '@/types'
 import { useAuthStore } from '@/stores'
 import { storeToRefs } from 'pinia'
+import { useEncryptMessage } from '@/composables/useEncryptMessage'
 
-export const createMessage = async (formData: Message) => {
-  const { identifier, subject, message } = formData
+export const createMessage = async (formData: UploadFormData) => {
+  const { identifier, subject, message, password } = formData
 
   if (!identifier || !subject || !message) throw new Error('All fields required')
+  if (!password) throw new Error('Message password is needed')
 
   const store = useAuthStore()
   const { user } = storeToRefs(store)
+
+  const { encrypt } = useEncryptMessage()
+
+  // Take the users message, and encrypts it with emoji password they have set
+  const { encryptedMessage } = encrypt(message, password)
 
   try {
     const res = await fetch(`${baseURL}/message`, {
@@ -23,7 +30,7 @@ export const createMessage = async (formData: Message) => {
         user_id: user.value?.id ?? null,
         identifier,
         subject,
-        message,
+        message: encryptedMessage,
       }),
     })
 
@@ -46,7 +53,6 @@ export const createMessage = async (formData: Message) => {
 
 export const useCreateMessage = () => {
   return useMutation({
-    mutationFn: ({ identifier, subject, message }: Message) =>
-      createMessage({ identifier, subject, message }),
+    mutationFn: (data: UploadFormData) => createMessage(data),
   })
 }
