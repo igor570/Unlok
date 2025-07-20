@@ -57,20 +57,6 @@ const onSubmit = form.handleSubmit(async (values) => {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  width: 400px;
   height: fit-content();
-}
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  height: fit-content();
-}
-
-.textarea-message {
-  min-height: 300px;
-  resize: none;
-  -webkit-user-drag: none;
-  user-select: text;
 }
 </style>

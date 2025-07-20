@@ -19,18 +19,21 @@ const { loggedIn } = storeToRefs(store)
   </nav>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 nav {
-  background: #222;
+  margin-top: 1rem;
+  background: $background-color;
   padding: 1rem;
   margin-bottom: 2rem;
+  border-radius: 4px;
+  width: 33%;
 }
 ul {
   display: flex;
   list-style: none;
   justify-content: space-evenly;
   display: flex;
-  gap: 1.5rem;
+  gap: 3rem;
   margin: 0;
   padding: 0;
 }
@@ -40,7 +43,8 @@ a {
   text-decoration: none;
   font-weight: 500;
 }
+
 a.router-link-exact-active {
-  text-decoration: underline;
+  color: rgb(182, 182, 255);
 }
 </style>

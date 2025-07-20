@@ -53,7 +53,7 @@ const props = defineProps<{
   border-radius: 4px;
   color: white;
   font-size: 16px;
-  min-height: 80px;
+  min-height: 150px;
   resize: vertical;
   font-family: inherit;
 
@@ -62,7 +62,7 @@ const props = defineProps<{
   }
 
   &.error {
-    border-color: lighten($border-color, 20%);
+    border-color: $error-border;
   }
 
   &.valid {
@@ -71,7 +71,7 @@ const props = defineProps<{
 }
 
 .error-message {
-  color: lighten($border-color, 30%);
+  color: $error-text;
   font-size: 12px;
   margin-top: 0.25rem;
 }
