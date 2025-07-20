@@ -11,7 +11,6 @@ const store = useAuthStore()
 const { user, loggedIn } = storeToRefs(store)
 
 if (!loggedIn.value) {
-  loggedIn.value = false
   router.push('/auth')
 }
 
