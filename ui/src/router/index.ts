@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { Home, Auth, Download, History, Profile, Unlock, Upload, Complete } from '@/views'
+import { Home, Auth, Download, History, Profile, Upload, Complete } from '@/views'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,11 +29,6 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: Profile,
-    },
-    {
-      path: '/unlock',
-      name: 'unlock',
-      component: Unlock,
     },
     {
       path: '/upload',
