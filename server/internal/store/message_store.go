@@ -13,6 +13,10 @@ type Message struct {
 	Message    string  `json:"message"`
 }
 
+type Messages struct {
+	Messages []Message
+}
+
 // What we'll send back, since it doesn't hold a userId & indentifier
 // This is when a anonymous user downloads a message
 type AnonMessageResponse struct {
@@ -36,7 +40,6 @@ func NewMessageStore(db *sql.DB, logger *log.Logger) *MessagePgStore {
 type MessageStore interface {
 	GetMessage(messageId string) (*Message, error)
 	CreateMessage(message *Message) (*Message, error)
-	UpdateMessage(message *Message) error
 	DeleteMessage(userId, messageId string) error
 
 	// For history fetching
@@ -64,9 +67,34 @@ func (s *MessagePgStore) GetMessage(messageId string) (*Message, error) {
 }
 
 func (s *MessagePgStore) GetAllMessage(userId string) ([]*Message, error) {
-	// TODO: Implement database logic
+	var messages []*Message
 
-	return nil, nil
+	query := `SELECT id, userid, identifier, subject, message FROM messages WHERE userid = $1`
+
+	rows, err := s.db.Query(query, userId)
+
+	if err != nil {
+		log.Printf("DB error: %v", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var msg Message
+		err := rows.Scan(&msg.Id, &msg.UserId, &msg.Identifier, &msg.Subject, &msg.Message)
+		if err != nil {
+			log.Printf("Row scan error: %v", err)
+			return nil, err
+		}
+		messages = append(messages, &msg)
+	}
+
+	if err = rows.Err(); err != nil {
+		log.Printf("Rows error: %v", err)
+		return nil, err
+	}
+
+	return messages, nil
 }
 
 func (s *MessagePgStore) CreateMessage(message *Message) (*Message, error) {
@@ -89,11 +117,6 @@ func (s *MessagePgStore) CreateMessage(message *Message) (*Message, error) {
 
 	message.Id = id
 	return message, nil
-}
-
-func (s *MessagePgStore) UpdateMessage(message *Message) error {
-	// TODO: Implement database logic
-	return nil
 }
 
 func (s *MessagePgStore) DeleteMessage(userId, messageId string) error {

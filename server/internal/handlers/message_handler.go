@@ -64,6 +64,44 @@ func (mh *MessageHandler) GetMessage(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resp)
 }
 
+func (mh *MessageHandler) GetAllMessages(w http.ResponseWriter, r *http.Request) {
+	userId := chi.URLParam(r, "userId")
+
+	if userId == "" {
+		utils.WriteJSON(w, http.StatusBadRequest, utils.Envelope{"Error": "Missing user id"})
+		return
+	}
+
+	foundMessages, err := mh.messageStore.GetAllMessage(userId)
+
+	if err != nil {
+		mh.logger.Printf("ERROR: Could not fetch messages %v", err)
+		utils.WriteJSON(w, http.StatusInternalServerError, utils.Envelope{"Error": "Could not fetch messages"})
+		return
+	}
+
+	if foundMessages == nil {
+		utils.WriteJSON(w, http.StatusNotFound, utils.Envelope{"Error": "Cannot find messages for given user"})
+		return
+	}
+
+	// Create a response struct for messages
+	messages := make([]store.Message, len(foundMessages))
+	for i, m := range foundMessages {
+		if m != nil {
+			messages[i] = *m
+		}
+	}
+
+	resp := store.Messages{
+		Messages: messages,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(resp)
+}
+
 func (mh *MessageHandler) CreateMessage(w http.ResponseWriter, r *http.Request) {
 	var message store.Message
 
