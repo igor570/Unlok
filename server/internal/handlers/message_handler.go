@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"strconv"
 
 	"log"
 	"net/http"
@@ -65,9 +66,14 @@ func (mh *MessageHandler) GetMessage(w http.ResponseWriter, r *http.Request) {
 }
 
 func (mh *MessageHandler) GetAllMessages(w http.ResponseWriter, r *http.Request) {
-	userId := chi.URLParam(r, "userId")
+	userId, err := strconv.Atoi(chi.URLParam(r, "userId"))
 
-	if userId == "" {
+	if err != nil {
+		utils.WriteJSON(w, http.StatusBadRequest, utils.Envelope{"Error": "Invalid user id"})
+		return
+	}
+
+	if userId == 0 {
 		utils.WriteJSON(w, http.StatusBadRequest, utils.Envelope{"Error": "Missing user id"})
 		return
 	}

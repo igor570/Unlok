@@ -9,6 +9,7 @@ export interface UploadFormData {
 }
 
 export interface Message {
+  id: string
   identifier: string
   subject: string
   message: string

@@ -6,15 +6,15 @@ import (
 )
 
 type Message struct {
-	Id         string  `json:"id"`
-	UserId     *string `json:"user_id,omitempty"`
-	Identifier string  `json:"identifier"`
-	Subject    string  `json:"subject"`
-	Message    string  `json:"message"`
+	Id         string `json:"id"`
+	UserId     *int   `json:"user_id,omitempty"`
+	Identifier string `json:"identifier"`
+	Subject    string `json:"subject"`
+	Message    string `json:"message"`
 }
 
 type Messages struct {
-	Messages []Message
+	Messages []Message `json:"messages"`
 }
 
 // What we'll send back, since it doesn't hold a userId & indentifier
@@ -43,7 +43,7 @@ type MessageStore interface {
 	DeleteMessage(userId, messageId string) error
 
 	// For history fetching
-	GetAllMessage(userId string) ([]*Message, error)
+	GetAllMessage(userId int) ([]*Message, error)
 }
 
 // CRUD
@@ -66,13 +66,12 @@ func (s *MessagePgStore) GetMessage(messageId string) (*Message, error) {
 	return &message, nil
 }
 
-func (s *MessagePgStore) GetAllMessage(userId string) ([]*Message, error) {
+func (s *MessagePgStore) GetAllMessage(userId int) ([]*Message, error) {
 	var messages []*Message
 
 	query := `SELECT id, userid, identifier, subject, message FROM messages WHERE userid = $1`
 
 	rows, err := s.db.Query(query, userId)
-
 	if err != nil {
 		log.Printf("DB error: %v", err)
 		return nil, err
