@@ -27,7 +27,7 @@ export const createMessage = async (formData: UploadFormData) => {
       },
       body: JSON.stringify({
         id: crypto.randomUUID(),
-        user_id: user.value?.id ?? null,
+        user_id: Number(user.value?.id) ?? null,
         identifier,
         subject,
         message: encryptedMessage,
