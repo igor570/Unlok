@@ -74,7 +74,7 @@ func (mh *MessageHandler) GetAllMessages(w http.ResponseWriter, r *http.Request)
 	}
 
 	if userId == 0 {
-		utils.WriteJSON(w, http.StatusBadRequest, utils.Envelope{"Error": "Missing user id"})
+		utils.WriteJSON(w, http.StatusBadRequest, utils.Envelope{"Error": "User ID 0 is not valid"})
 		return
 	}
 
