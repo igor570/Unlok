@@ -86,7 +86,7 @@ func (mh *MessageHandler) GetAllMessages(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if foundMessages == nil {
+	if len(foundMessages) == 0 {
 		utils.WriteJSON(w, http.StatusNotFound, utils.Envelope{"Error": "Cannot find messages for given user"})
 		return
 	}
