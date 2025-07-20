@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, defineEmits } from 'vue'
+import { computed, ref } from 'vue'
 import { passwordFormSchema } from '@/types'
 import { useForm, Field } from 'vee-validate'
 
