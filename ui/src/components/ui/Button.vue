@@ -1,36 +1,21 @@
 <script setup lang="ts">
-import { useForm } from 'vee-validate'
+import type { FormContext } from 'vee-validate'
+import { computed } from 'vue'
 import Spinner from '@/components/Spinner/Spinner.vue'
 
 const props = defineProps<{
   label: string
-  type?: 'button' | 'submit' | 'reset'
-  disabled?: boolean
-  loading?: boolean
+  type: 'button' | 'submit' | 'reset'
+  isPending?: boolean
+  form?: FormContext
 }>()
 
-// Get form state if the button is inside a vee-validate form
-const form = useForm()
-const isSubmitting = form?.isSubmitting || false
-const isFormValid = form?.meta.value.valid || true
-
-// Show loading if manually set or if submitting
-const showLoading = props.loading || (isSubmitting && props.type === 'submit')
+const isPending = computed(() => props.isPending)
 </script>
 
 <template>
-  <button
-    :type="props.type || 'submit'"
-    :disabled="
-      props.disabled || (props.type === 'submit' && (!isFormValid || isSubmitting)) || props.loading
-    "
-    class="base button"
-    :class="{
-      loading: showLoading,
-      disabled: props.disabled || (props.type === 'submit' && !isFormValid),
-    }"
-  >
-    <Spinner v-if="showLoading" :size="16" />
+  <button :type="props.type" class="base button" :class="{ loading: isPending }">
+    <Spinner v-if="isPending" :size="16" />
     <span v-else>{{ props.label }}</span>
   </button>
 </template>

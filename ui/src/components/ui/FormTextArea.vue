@@ -1,31 +1,35 @@
 <script setup lang="ts">
-import { useField } from 'vee-validate'
+import { Field, type FormContext } from 'vee-validate'
 
 const props = defineProps<{
   label: string
   name: string
-  placeholder?: string
-  rules?: any
+  placeholder: string
+  form: FormContext
 }>()
-
-const { value, errorMessage, handleBlur, handleChange, meta } = useField(props.name, props.rules, {
-  initialValue: '',
-})
 </script>
 
 <template>
-  <label class="textarea-wrapper">
-    {{ label }}
-    <textarea
+  <div class="form-group">
+    <label :for="props.name">{{ props.label }}</label>
+    <Field
+      class="base textarea"
+      :class="{
+        error: props.form.errors.value[props.name],
+        valid: props.form.meta.value.valid && props.form.meta.value.dirty,
+      }"
+      :id="props.name"
       :name="props.name"
-      :value="value"
-      :placeholder="placeholder"
-      @input="handleChange"
-      @blur="handleBlur"
-      :class="['base', 'input', { error: errorMessage, valid: meta.valid && meta.dirty }]"
+      type="text"
+      as="textarea"
+      :placeholder="props.placeholder"
+      :model-value="props.form.values[props.name]"
+      @update:model-value="props.form.setFieldValue(props.name, $event)"
     />
-    <span v-if="errorMessage" class="error-message">{{ errorMessage }}</span>
-  </label>
+    <div class="error-message" v-if="props.form.errors.value[props.name]">
+      {{ props.form.errors.value[props.name] }}
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -34,7 +38,7 @@ const { value, errorMessage, handleBlur, handleChange, meta } = useField(props.n
   outline: inherit;
 }
 
-.textarea-wrapper {
+.form-group {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -42,7 +46,7 @@ const { value, errorMessage, handleBlur, handleChange, meta } = useField(props.n
   font-size: 14px;
 }
 
-textarea {
+.textarea {
   border: 1px solid $border-color;
   background-color: $background-color;
   padding: 0.5rem 0.75rem;

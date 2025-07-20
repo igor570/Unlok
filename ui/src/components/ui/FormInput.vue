@@ -1,32 +1,35 @@
 <script setup lang="ts">
-import { useField } from 'vee-validate'
+import type { FormContext } from 'vee-validate'
+import { Field } from 'vee-validate'
 
 const props = defineProps<{
   label: string
   name: string
   placeholder: string
-  rules?: any
+  form: FormContext
 }>()
-
-// Use vee-validate's useField composable
-const { value, errorMessage, handleBlur, handleChange, meta } = useField(props.name, props.rules, {
-  initialValue: '',
-})
 </script>
 
 <template>
-  <label class="input-wrapper">
-    {{ props.label }}
-    <input
+  <div class="form-group">
+    <label :for="props.name">{{ props.label }}</label>
+    <Field
+      class="base input"
+      :class="{
+        error: props.form.errors.value[props.name],
+        valid: props.form.meta.value.valid && props.form.meta.value.dirty,
+      }"
+      :id="props.name"
       :name="props.name"
-      :value="value"
+      type="text"
       :placeholder="props.placeholder"
-      @input="handleChange"
-      @blur="handleBlur"
-      :class="['base', 'input', { error: errorMessage, valid: meta.valid && meta.dirty }]"
+      :model-value="props.form.values[props.name]"
+      @update:model-value="props.form.setFieldValue(props.name, $event)"
     />
-    <span v-if="errorMessage" class="error-message">{{ errorMessage }}</span>
-  </label>
+    <div class="error-message" v-if="props.form.errors.value[props.name]">
+      {{ props.form.errors.value[props.name] }}
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -35,7 +38,7 @@ const { value, errorMessage, handleBlur, handleChange, meta } = useField(props.n
   outline: inherit;
 }
 
-.input-wrapper {
+.form-group {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -57,16 +60,16 @@ const { value, errorMessage, handleBlur, handleChange, meta } = useField(props.n
   }
 
   &.error {
-    border-color: #ef4444;
+    border-color: lighten($border-color, 20%);
   }
 
   &.valid {
-    border-color: #10b981;
+    border-color: darken($border-color, 10%);
   }
 }
 
 .error-message {
-  color: #ef4444;
+  color: lighten($border-color, 30%);
   font-size: 12px;
   margin-top: 0.25rem;
 }
