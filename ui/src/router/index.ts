@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { Home, Auth, Download, History, Profile, Upload, Complete } from '@/views'
+import Ui from '@/views/ui.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,11 @@ const router = createRouter({
       path: '/complete',
       name: 'complete',
       component: Complete,
+    },
+    {
+      path: '/ui',
+      name: 'ui',
+      component: Ui,
     },
   ],
 })
