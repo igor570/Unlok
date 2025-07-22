@@ -81,13 +81,15 @@ const handleSkip = () => router.push('/')
       :form="form"
     />
 
-    <div v-if="toggleForm === 'signup'">
-      {{ footerText }}<span class="toggle-label" @click="toggleForm = 'login'">Login here</span>
+    <div v-if="toggleForm === 'signup'" class="footer-text">
+      {{ footerText }}
+      <span class="toggle-label" @click="toggleForm = 'login'">Login here</span>
     </div>
 
-    <div v-if="toggleForm === 'login'">
+    <div v-if="toggleForm === 'login'" class="footer-text">
       {{ footerText }}<span class="toggle-label" @click="toggleForm = 'signup'">Signup here</span>
     </div>
+
     <!-- Submit -->
     <div class="button-group">
       <Button
@@ -97,7 +99,7 @@ const handleSkip = () => router.push('/')
         :form="form"
       />
       <!-- Skip Button -->
-      <Button label="Skip" type="button" @click="handleSkip" class="submit-btn-ghost" />
+      <Button label="Skip" type="button" @click="handleSkip" />
     </div>
   </form>
 </template>
@@ -111,6 +113,20 @@ const handleSkip = () => router.push('/')
   flex-direction: column;
   gap: 1.2rem;
   height: fit-content();
+}
+
+.footer-text {
+  color: white;
+}
+
+.toggle-label {
+  color: $highlight-color;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: lighten($highlight-color, 10%);
+  }
 }
 
 .button-group {

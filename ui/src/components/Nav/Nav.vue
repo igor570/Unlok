@@ -45,6 +45,6 @@ a {
 }
 
 a.router-link-exact-active {
-  color: rgb(182, 182, 255);
+  color: $highlight-color;
 }
 </style>
