@@ -34,11 +34,8 @@ const onSubmit = form.handleSubmit(async (values) => {
 
   if (mode === 'login') {
     const result = await loginMutateAsync(omit(values, ['confirmedPassword']))
-    if (result) {
-      const { id, username, profilePhoto } = result
-      // use this pinia data across the app when its set
-      setUser({ id, username, profilePhoto })
-    }
+    // use this pinia data across the app when its set
+    setUser(result)
     setLoggedIn(true)
     router.push('/upload')
   }
@@ -60,6 +57,7 @@ const handleSkip = () => router.push('/')
       label="Username"
       name="username"
       type="text"
+      Down
       placeholder="Enter your username..."
       :form="form"
     />
