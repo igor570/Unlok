@@ -7,6 +7,7 @@ const props = defineProps<{
   name: string
   placeholder: string
   form: FormContext
+  type?: 'text' | 'password'
 }>()
 </script>
 
@@ -21,7 +22,7 @@ const props = defineProps<{
       }"
       :id="props.name"
       :name="props.name"
-      type="text"
+      :type="props.type ?? 'text'"
       :placeholder="props.placeholder"
       :model-value="props.form.values[props.name]"
       @update:model-value="props.form.setFieldValue(props.name, $event)"

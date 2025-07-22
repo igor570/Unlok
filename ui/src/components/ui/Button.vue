@@ -41,6 +41,7 @@ const isPending = computed(() => props.isPending)
   align-items: center;
   justify-content: center;
   min-height: 44px; // ensures consistent height when showing spinner
+  width: 100%;
 
   &:hover:not(:disabled) {
     background-color: $background-hover-color;
